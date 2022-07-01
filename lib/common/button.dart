@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:safe_khata_book/view/common/color.dart';
+import 'package:safe_khata_book/common/color.dart';
 import 'package:sizer/sizer.dart';
 
 class CommonButton {

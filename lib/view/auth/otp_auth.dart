@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:safe_khata_book/view/common/button.dart';
-import 'package:safe_khata_book/view/common/common_sizebox.dart';
-import 'package:safe_khata_book/view/common/custom_textField.dart';
+
 import 'package:sizer/sizer.dart';
 
-import '../common/app_bar.dart';
+import '../../common/app_bar.dart';
+import '../../common/button.dart';
+import '../../common/common_sizebox.dart';
+import '../../common/custom_textField.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+class OtpScreen extends StatefulWidget {
+  const OtpScreen({Key? key}) : super(key: key);
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<OtpScreen> createState() => _OtpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _OtpScreenState extends State<OtpScreen> {
   TextEditingController mobileOtp = TextEditingController();
   bool number = false;
 
@@ -46,7 +47,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               bottom: 40,
             ),
             child: CommonButton.commonButton(text: "GET OTP", onTap: () {}),
-          )
+          ),
         ]),
       ),
     );

@@ -1,4 +1,4 @@
-import 'package:safe_khata_book/view/common/language_utility.dart';
+import 'language_utility.dart';
 
 class ValidationUtility {
   static String alphabetValidationPattern = r"[a-zA-Z]";
