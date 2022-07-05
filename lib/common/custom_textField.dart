@@ -55,6 +55,7 @@ class CommonTextFiled {
       TextEditingController? controller,
       TextInputType? textInputType,
       dynamic onChange,
+      Widget? prefixIcon,
       required List<TextInputFormatter> inputFormatters}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -69,7 +70,8 @@ class CommonTextFiled {
         controller: controller,
         cursorColor: ColorPicker.grey,
         decoration: InputDecoration(
-          prefix: CommonSizeBox.commonSize(width: 15.sp),
+          prefixStyle: TextStyle(),
+          prefix: prefixIcon,
           isCollapsed: true,
           focusColor: ColorPicker.grey,
           hoverColor: ColorPicker.testFiledHintBorder,

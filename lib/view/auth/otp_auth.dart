@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:get/get.dart';
+import 'package:safe_khata_book/view/auth/verify_otp.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../common/app_bar.dart';
 import '../../common/button.dart';
 import '../../common/common_sizebox.dart';
 import '../../common/custom_textField.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+enum MobileVerificationState {
+  SHOW_MOBILE_FORM_STATE,
+  SHOW_OTP_FORM_STATE,
+}
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({Key? key}) : super(key: key);
@@ -18,6 +24,12 @@ class OtpScreen extends StatefulWidget {
 class _OtpScreenState extends State<OtpScreen> {
   TextEditingController mobileOtp = TextEditingController();
   bool number = false;
+
+  ///=====Mobile-Otp=====///
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  MobileVerificationState currentState =
+      MobileVerificationState.SHOW_MOBILE_FORM_STATE;
+  String? verificationId;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +58,14 @@ class _OtpScreenState extends State<OtpScreen> {
             padding: EdgeInsets.only(
               bottom: 40,
             ),
-            child: CommonButton.commonButton(text: "GET OTP", onTap: () {}),
+            child: CommonButton.commonButton(
+                text: "GET OTP",
+                onTap: () {
+                  if (10 == int.parse(mobileOtp.text) ||
+                      mobileOtp.text.isNotEmpty) {
+                    Get.to(VerifyOtpScreen());
+                  }
+                }),
           ),
         ]),
       ),

@@ -47,7 +47,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar.appBar(),
+      appBar: CommonAppBar.appBarCenterName(name: "SafeKhataBook"),
       body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Container(
           height: 60.sp,
@@ -75,6 +75,9 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
         Padding(
           padding: EdgeInsets.all(10),
           child: CommonTextFiled.otpTextFiled(
+              prefixIcon: SizedBox(
+                width: 15,
+              ),
               controller: otp,
               inputFormatters: [LengthLimitingTextInputFormatter(6)],
               textInputType: TextInputType.number,

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "18054250296",
+    "project_id": "safekhatabook",
+    "storage_bucket": "safekhatabook.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:18054250296:android:2a090851d5f8fd5f6acbcd",
+        "android_client_info": {
+          "package_name": "com.example.safe_khata_book"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "18054250296-mtssop6j4qaggdfa01dqsm697sr8f4nn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.safe_khata_book",
+            "certificate_hash": "53510a023feb0f34cdc104942f7659aaa455dc9c"
+          }
+        },
+        {
+          "client_id": "18054250296-aubjnt6ioaaeihuv3vb78ti5emg49u9b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfFUmk8uzDqWVra-IrF3W4QY9qduGCZJQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "18054250296-aubjnt6ioaaeihuv3vb78ti5emg49u9b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

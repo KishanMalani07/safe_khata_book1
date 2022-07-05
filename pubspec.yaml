@@ -36,6 +36,12 @@ dependencies:
   cupertino_icons: ^1.0.2
   sizer: ^2.0.15
   flutter_svg: ^0.23.0+1
+  # show contacts
+  flutter_contacts: ^1.1.5
+  url_launcher: ^6.1.4
+  #firebase
+  firebase_auth: ^3.4.1
+  firebase_core: ^1.19.1
 
 
   get: any
