@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:safe_khata_book/common/color.dart';
-import 'package:safe_khata_book/common/common_sizebox.dart';
 
 import 'package:sizer/sizer.dart';
 
@@ -55,7 +54,7 @@ class CommonTextFiled {
       TextEditingController? controller,
       TextInputType? textInputType,
       dynamic onChange,
-      Widget? prefixIcon,
+      Widget? prefix,
       required List<TextInputFormatter> inputFormatters}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -71,7 +70,7 @@ class CommonTextFiled {
         cursorColor: ColorPicker.grey,
         decoration: InputDecoration(
           prefixStyle: TextStyle(),
-          prefix: prefixIcon,
+          prefix: prefix,
           isCollapsed: true,
           focusColor: ColorPicker.grey,
           hoverColor: ColorPicker.testFiledHintBorder,

@@ -46,4 +46,12 @@ class CommonAppBar {
           )),
     );
   }
+
+  static customerAppData() {
+    return Container(
+      width: Get.width,
+      height: Get.height * 0.1,
+      color: ColorPicker.grey,
+    );
+  }
 }

@@ -42,6 +42,12 @@ dependencies:
   #firebase
   firebase_auth: ^3.4.1
   firebase_core: ^1.19.1
+  cloud_firestore: ^3.2.1
+  #otp
+  flutter_otp_text_field: ^1.0.1
+  #shared pre
+  get_storage: ^2.0.3
+  firebase_messaging: ^11.4.4
 
 
   get: any

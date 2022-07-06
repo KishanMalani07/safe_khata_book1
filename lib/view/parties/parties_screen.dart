@@ -5,6 +5,7 @@ import 'package:safe_khata_book/common/app_bar.dart';
 import 'package:safe_khata_book/common/color.dart';
 import 'package:safe_khata_book/common/common_sizebox.dart';
 import 'package:safe_khata_book/common/custom_textField.dart';
+import 'package:safe_khata_book/view/parties/customer_data.dart';
 import 'package:safe_khata_book/view/parties/get_contact.dart';
 import 'package:sizer/sizer.dart';
 
@@ -120,7 +121,7 @@ class _PartiesScreenState extends State<PartiesScreen> {
                       width: 180.sp,
                       child: CommonTextFiled.otpTextFiled(
                           hintText: "Search",
-                          prefixIcon: Icon(Icons.search_rounded),
+                          prefix: SizedBox(width: 15),
                           inputFormatters: [],
                           textInputType: TextInputType.text)),
                 ),
@@ -152,60 +153,65 @@ class _PartiesScreenState extends State<PartiesScreen> {
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.all(5.0),
-                    child: Container(
-                      color: ColorPicker.lightContainerColor,
-                      height: 65.sp,
-                      width: Get.width,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 10.0, right: 10),
-                        child: Row(
-                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                height: 50.sp,
-                                width: 50.sp,
-                                decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    // color: Colors.white,
-                                    shape: BoxShape.circle),
-                              ),
-                              CommonSizeBox.commonSize(width: 20.sp),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 17, bottom: 17),
-                                child: Column(
-                                  children: [
-                                    showListText(
-                                        text: "Jay sen",
-                                        fontSize: 15.sp,
-                                        color: Colors.black.withOpacity(0.5)),
-                                    Spacer(),
-                                    showListText(
-                                        text: "2 hours ago",
-                                        color: Colors.black.withOpacity(0.3)),
-                                  ],
+                    child: InkWell(
+                      onTap: () {
+                        Get.to(CustomerData());
+                      },
+                      child: Container(
+                        color: ColorPicker.lightContainerColor,
+                        height: 65.sp,
+                        width: Get.width,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10.0, right: 10),
+                          child: Row(
+                              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  height: 50.sp,
+                                  width: 50.sp,
+                                  decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      // color: Colors.white,
+                                      shape: BoxShape.circle),
                                 ),
-                              ),
-                              Spacer(),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 17, bottom: 17),
-                                child: Column(
-                                  children: [
-                                    showListText(
-                                        text: "1000",
-                                        fontSize: 15.sp,
-                                        color: index.isEven
-                                            ? Colors.red
-                                            : Colors.green),
-                                    Spacer(),
-                                    showListText(
-                                        text: "You will give",
-                                        color: Colors.black.withOpacity(0.3)),
-                                  ],
+                                CommonSizeBox.commonSize(width: 20.sp),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 17, bottom: 17),
+                                  child: Column(
+                                    children: [
+                                      showListText(
+                                          text: "Jay sen",
+                                          fontSize: 15.sp,
+                                          color: Colors.black.withOpacity(0.5)),
+                                      Spacer(),
+                                      showListText(
+                                          text: "2 hours ago",
+                                          color: Colors.black.withOpacity(0.3)),
+                                    ],
+                                  ),
                                 ),
-                              )
-                            ]),
+                                Spacer(),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 17, bottom: 17),
+                                  child: Column(
+                                    children: [
+                                      showListText(
+                                          text: "1000",
+                                          fontSize: 15.sp,
+                                          color: index.isEven
+                                              ? Colors.red
+                                              : Colors.green),
+                                      Spacer(),
+                                      showListText(
+                                          text: "You will give",
+                                          color: Colors.black.withOpacity(0.3)),
+                                    ],
+                                  ),
+                                )
+                              ]),
+                        ),
                       ),
                     ),
                   );

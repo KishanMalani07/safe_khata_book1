@@ -4,7 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/bindings_interface.dart';
-import 'package:safe_khata_book/view/auth/otp_auth.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:safe_khata_book/view/auth/mobile_login.dart';
 
 import 'package:safe_khata_book/view_model.dart';
 import 'package:sizer/sizer.dart';
@@ -17,7 +18,10 @@ void main() async {
     statusBarBrightness: Brightness.light,
     statusBarIconBrightness: Brightness.dark,
   ));
+  await Firebase.initializeApp();
+  // await GetStorage.init();
 
+  ///firebase initiallize
   runApp(const MyApp());
 }
 
@@ -39,7 +43,7 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: Colors.blue,
         ),
         // home: PartiesScreen(),
-        home: OtpScreen(),
+        home: MobileAuthScreen(),
         // home: VerifyOtpScreen(),
       ),
     );
