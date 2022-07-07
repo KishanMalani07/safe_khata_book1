@@ -23,4 +23,24 @@ class CommonButton {
       ),
     );
   }
+
+  static commonYouGaveButton({String? text, dynamic onTap, color}) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        height: Get.height * 0.05,
+        width: Get.width * 0.45,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          color: color,
+        ),
+        child: Center(
+          child: Text(
+            text!,
+            style: TextStyle(color: ColorPicker.whiteColor, fontSize: 13.sp),
+          ),
+        ),
+      ),
+    );
+  }
 }

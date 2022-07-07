@@ -6,6 +6,8 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/bindings_interface.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:safe_khata_book/view/auth/mobile_login.dart';
+import 'package:safe_khata_book/view/bottom_bar/bottom_bar_screen.dart';
+import 'package:safe_khata_book/view/parties/customer_data_screen.dart';
 
 import 'package:safe_khata_book/view_model.dart';
 import 'package:sizer/sizer.dart';
@@ -13,6 +15,12 @@ import 'package:sizer/sizer.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  /// check this already user login
+  final getStorage = GetStorage();
+  final uid = getStorage.read('uid');
+
+  ///
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.white.withOpacity(1),
     statusBarBrightness: Brightness.light,
@@ -22,11 +30,15 @@ void main() async {
   // await GetStorage.init();
 
   ///firebase initiallize
-  runApp(const MyApp());
+  runApp(MyApp(
+    uid: uid,
+  ));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final uid;
+
+  const MyApp({super.key, required this.uid});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -42,8 +54,11 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        // home: PartiesScreen(),
-        home: MobileAuthScreen(),
+
+        // home: widget.uid == null ? MobileAuthScreen() : BottomBarScreen(),
+        home: BottomBarScreen(),
+        // home: CustomerData(),
+
         // home: VerifyOtpScreen(),
       ),
     );

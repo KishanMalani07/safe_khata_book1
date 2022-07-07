@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:safe_khata_book/common_method/sign_out.dart';
 
 class MoreScreen extends StatefulWidget {
   const MoreScreen({Key? key}) : super(key: key);
@@ -12,7 +13,10 @@ class _MoreScreenState extends State<MoreScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
-      child: Text("More Screen"),
-    ));
+            child: InkWell(
+                onTap: () {
+                  SignOut.signOut();
+                },
+                child: Icon(Icons.logout))));
   }
 }

@@ -5,7 +5,7 @@ import 'package:safe_khata_book/common/app_bar.dart';
 import 'package:safe_khata_book/common/color.dart';
 import 'package:safe_khata_book/common/common_sizebox.dart';
 import 'package:safe_khata_book/common/custom_textField.dart';
-import 'package:safe_khata_book/view/parties/customer_data.dart';
+import 'package:safe_khata_book/view/parties/customer_data_screen.dart';
 import 'package:safe_khata_book/view/parties/get_contact.dart';
 import 'package:sizer/sizer.dart';
 

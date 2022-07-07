@@ -47,21 +47,22 @@ class _MobileAuthScreenState extends State<MobileAuthScreen> {
       });
 
       if (authCredential?.user != null) {
-        DocumentReference doc =
-            FirebaseFirestore.instance.collection("contact").doc();
+        DocumentReference doc = FirebaseFirestore.instance
+            .collection("contact")
+            .doc(FirebaseAuth.instance.currentUser!.uid);
+        doc.set({"mobileNumber": phoneController.text});
 
-        doc.set({'uid': doc.id, "contact": phoneController.text});
-        PreferencesManager.setUid("${doc.id}");
-        PreferencesManager.getUid();
-        print("PreferencesManager.getUid();${PreferencesManager.getUid()}");
+        var findDocId = doc.id;
 
-        // if (authCredential?.user != null) {
+        print("findDocId$findDocId");
+        PreferencesManager.setUid("$findDocId");
+        // print(" PreferencesManager${PreferencesManager.getUid()}");
+
         Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BottomBarScreen(),
-          ),
-        );
+            context,
+            MaterialPageRoute(
+              builder: (context) => BottomBarScreen(),
+            ));
       }
     } on FirebaseAuthException catch (e) {
       setState(() {
@@ -137,12 +138,6 @@ class _MobileAuthScreenState extends State<MobileAuthScreen> {
             ),
             child: CommonButton.commonButton(
               text: "GET OTP",
-              // onTap: () {
-              //   print("getotp Click");
-              //   if (10 == int.parse(phoneController.text)) {
-              //     CommonSnackBar.showSnackBar(msg: "Please enter 10 digit");
-              //   }
-              // }
             ),
           ),
           // color: Colors.blue,
