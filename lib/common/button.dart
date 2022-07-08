@@ -28,7 +28,7 @@ class CommonButton {
     return InkWell(
       onTap: onTap,
       child: Container(
-        height: Get.height * 0.05,
+        height: Get.height * 0.055,
         width: Get.width * 0.45,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
@@ -39,6 +39,31 @@ class CommonButton {
             text!,
             style: TextStyle(color: ColorPicker.whiteColor, fontSize: 13.sp),
           ),
+        ),
+      ),
+    );
+  }
+
+  static commonWithIconButton(
+      {String? text, dynamic onTap, color, Icon? icon}) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        height: Get.height * 0.055,
+        width: Get.width * 0.45,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          color: color,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            icon!,
+            Text(
+              text!,
+              style: TextStyle(color: ColorPicker.whiteColor, fontSize: 13.sp),
+            ),
+          ],
         ),
       ),
     );

@@ -5,6 +5,7 @@ import 'package:safe_khata_book/common/app_bar.dart';
 import 'package:safe_khata_book/common/button.dart';
 import 'package:safe_khata_book/common/color.dart';
 import 'package:safe_khata_book/common/text.dart';
+import 'package:safe_khata_book/view/parties/entry_details_screen.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../common/common_sizebox.dart';
@@ -27,7 +28,7 @@ class _CustomerDataState extends State<CustomerData> {
           CommonButton.commonYouGaveButton(
               text: "YOU GAVE \$", color: Colors.red),
           CommonButton.commonYouGaveButton(
-              text: "YOU GAVE \$", color: ColorPicker.green)
+              text: "YOU GOT \$", color: ColorPicker.green)
         ]),
       ),
       appBar: CommonAppBar.customerAppData(),
@@ -165,7 +166,7 @@ class _CustomerDataState extends State<CustomerData> {
                 padding: const EdgeInsets.all(5.0),
                 child: InkWell(
                   onTap: () {
-                    Get.to(CustomerData());
+                    Get.to(EntryDetailsScreen());
                   },
                   child: Container(
                     color: ColorPicker.lightContainerColor,

@@ -36,6 +36,7 @@ class CommonAppBar {
       backgroundColor: Colors.white,
       title: Text(
         text!,
+        overflow: TextOverflow.ellipsis,
         style: TextStyle(color: ColorPicker.grey, fontSize: 20.sp),
       ),
       leading: InkWell(

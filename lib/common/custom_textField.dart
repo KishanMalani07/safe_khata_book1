@@ -99,4 +99,47 @@ class CommonTextFiled {
       ),
     );
   }
+
+  static entryTextFiled(
+      {String? hintText,
+      TextEditingController? controller,
+      TextInputType? textInputType,
+      dynamic onChange,
+      Widget? prefixIcon,
+      Widget? prefix,
+      required List<TextInputFormatter> inputFormatters}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: TextFormField(
+        keyboardType: textInputType,
+        inputFormatters: inputFormatters,
+        style: TextStyle(
+          color: ColorPicker.grey,
+          fontSize: 15.sp,
+          fontWeight: FontWeight.w400,
+        ),
+        onChanged: onChange,
+        controller: controller,
+        cursorColor: ColorPicker.grey,
+        decoration: InputDecoration(
+          prefixStyle: TextStyle(color: ColorPicker.grey),
+          prefixIcon: prefixIcon,
+          prefix: prefix,
+          isCollapsed: true,
+          focusColor: ColorPicker.grey,
+          hoverColor: ColorPicker.testFiledHintBorder,
+          enabledBorder: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          border: InputBorder.none,
+          hintText: hintText,
+          contentPadding: EdgeInsets.symmetric(vertical: 10.sp),
+          hintStyle: TextStyle(
+            color: ColorPicker.grey,
+            fontWeight: FontWeight.w400,
+            fontSize: 15.sp,
+          ),
+        ),
+      ),
+    );
+  }
 }

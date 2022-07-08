@@ -1,12 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 import 'package:get/get.dart';
 import 'package:safe_khata_book/common/app_bar.dart';
 import 'package:safe_khata_book/common/color.dart';
 import 'package:safe_khata_book/common/common_sizebox.dart';
 import 'package:safe_khata_book/common/custom_textField.dart';
 import 'package:safe_khata_book/view/parties/customer_data_screen.dart';
-import 'package:safe_khata_book/view/parties/get_contact.dart';
 import 'package:sizer/sizer.dart';
 
 class PartiesScreen extends StatefulWidget {
@@ -21,8 +22,16 @@ class _PartiesScreenState extends State<PartiesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         floatingActionButton: InkWell(
-          onTap: () {
-            Get.to(GetContactList());
+          onTap: () async {
+            final FullContact contact =
+                await FlutterContactPicker.pickFullContact();
+            print("contact${contact}");
+
+            // FirebaseFirestore.instance
+            //     .collection("mobile_number")
+            //     .add({"contact_number": });
+
+            // Get.to(GetContactList());
           },
           child: Container(
             height: 50.sp,
