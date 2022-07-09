@@ -5,7 +5,7 @@ import 'package:safe_khata_book/common/color.dart';
 import 'package:safe_khata_book/view/money/money_screen%5D.dart';
 import 'package:safe_khata_book/view/more/more_screen.dart';
 import 'package:safe_khata_book/view/parties/parties_screen.dart';
-import 'package:safe_khata_book/view_model.dart';
+import 'package:safe_khata_book/view_model/bottom_controller.dart';
 import 'package:sizer/sizer.dart';
 
 List<Widget> tabPage = [PartiesScreen(), MoneyScreen(), MoreScreen()];

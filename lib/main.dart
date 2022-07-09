@@ -7,13 +7,15 @@ import 'package:get/get_instance/src/bindings_interface.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:safe_khata_book/view/auth/mobile_login.dart';
 import 'package:safe_khata_book/view/bottom_bar/bottom_bar_screen.dart';
-import 'package:safe_khata_book/view/parties/calender.dart';
+import 'package:safe_khata_book/view/parties/calander.dart';
 import 'package:safe_khata_book/view/parties/customer_data_screen.dart';
 import 'package:safe_khata_book/view/parties/edit_entry_screen.dart';
 import 'package:safe_khata_book/view/parties/entry_details_screen.dart';
 
-import 'package:safe_khata_book/view_model.dart';
+import 'package:safe_khata_book/view_model/bottom_controller.dart';
 import 'package:sizer/sizer.dart';
+
+import 'view_model/save_data_entry.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -72,6 +74,7 @@ class BaseBindings extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => BottomController(), fenix: true);
+    Get.lazyPut(() => SaveDataEntryController(), fenix: true);
     // TODO: implement dependencies
   }
 }

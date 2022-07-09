@@ -30,14 +30,14 @@ class CommonAppBar {
     );
   }
 
-  static appBarCenterNameAndBackArrow({@required String? text}) {
+  static appBarCenterNameAndBackArrow({@required String? text, color}) {
     return AppBar(
       centerTitle: true,
       backgroundColor: Colors.white,
       title: Text(
         text!,
         overflow: TextOverflow.ellipsis,
-        style: TextStyle(color: ColorPicker.grey, fontSize: 20.sp),
+        style: TextStyle(color: color, fontSize: 20.sp),
       ),
       leading: InkWell(
           onTap: () {
@@ -50,7 +50,11 @@ class CommonAppBar {
     );
   }
 
-  static customerAppData() {
+  static customerAppData(
+      {@required String? name,
+      String? subName,
+      Widget? container,
+      Widget? icon}) {
     return PreferredSize(
         child: Container(
           width: Get.width,
@@ -70,34 +74,26 @@ class CommonAppBar {
                 ),
               ),
               CommonSizeBox.commonSize(width: 10.sp),
-              Container(
-                height: 35.sp,
-                width: 35.sp,
-                decoration:
-                    BoxDecoration(color: Colors.yellow, shape: BoxShape.circle),
-              ),
+              container!,
               CommonSizeBox.commonSize(width: 10.sp),
               Padding(
                 padding: const EdgeInsets.only(top: 10.0, left: 8),
                 child: Column(
                   children: [
                     CommonText.simpleText(
-                        text: "Name",
+                        text: name,
                         fontSize: 15.sp,
                         color: ColorPicker.whiteColor,
                         fontWeight: FontWeight.bold),
                     CommonText.simpleText(
-                        text: "Sub Title",
+                        text: subName,
                         fontSize: 10.sp,
                         color: ColorPicker.whiteColor)
                   ],
                 ),
               ),
               Spacer(),
-              Icon(
-                Icons.more_vert,
-                color: ColorPicker.whiteColor,
-              )
+              icon!
             ]),
           ),
         ),

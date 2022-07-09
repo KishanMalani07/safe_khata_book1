@@ -29,4 +29,13 @@ class PreferencesManager {
   static getUid() {
     return getStorage.read("uid");
   }
+
+  ///YouGave
+  static Future setYouGave(String youGave) async {
+    await getStorage.write("youGave", youGave);
+  }
+
+  static getYouGave() {
+    return getStorage.read("youGave");
+  }
 }

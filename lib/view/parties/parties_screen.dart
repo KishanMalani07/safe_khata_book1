@@ -18,6 +18,16 @@ class PartiesScreen extends StatefulWidget {
 }
 
 class _PartiesScreenState extends State<PartiesScreen> {
+  /// current time
+  todayDate() {
+    // var now = new DateTime.now();
+    // var formatter = new DateFormat('dd-MM-yyyy');
+    // String formattedTime = DateFormat('kk:mm:a').format(now);
+    // String formattedDate = formatter.format(now);
+    // print(formattedTime);
+    // print(formattedDate);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,13 +35,18 @@ class _PartiesScreenState extends State<PartiesScreen> {
           onTap: () async {
             final FullContact contact =
                 await FlutterContactPicker.pickFullContact();
-            print("contact${contact}");
+            print("contact123${contact}");
 
-            // FirebaseFirestore.instance
-            //     .collection("mobile_number")
-            //     .add({"contact_number": });
+            Map<String, String> getContact = {
+              "firstName": "${contact.name!.firstName}",
+              "number": "${contact.phones[0].number}",
+              "profile_picture": "${contact.photo}",
+            };
+            print("getContact-----------------$getContact");
 
-            // Get.to(GetContactList());
+            FirebaseFirestore.instance
+                .collection("mobile_number")
+                .add(getContact);
           },
           child: Container(
             height: 50.sp,
@@ -155,78 +170,100 @@ class _PartiesScreenState extends State<PartiesScreen> {
               ],
             ),
             Expanded(
-              child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: InkWell(
-                      onTap: () {
-                        Get.to(CustomerData());
-                      },
-                      child: Container(
-                        color: ColorPicker.lightContainerColor,
-                        height: 65.sp,
-                        width: Get.width,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 10.0, right: 10),
-                          child: Row(
-                              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  height: 50.sp,
-                                  width: 50.sp,
-                                  decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      // color: Colors.white,
-                                      shape: BoxShape.circle),
-                                ),
-                                CommonSizeBox.commonSize(width: 20.sp),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 17, bottom: 17),
-                                  child: Column(
-                                    children: [
-                                      showListText(
-                                          text: "Jay sen",
-                                          fontSize: 15.sp,
-                                          color: Colors.black.withOpacity(0.5)),
-                                      Spacer(),
-                                      showListText(
-                                          text: "2 hours ago",
-                                          color: Colors.black.withOpacity(0.3)),
-                                    ],
-                                  ),
-                                ),
-                                Spacer(),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 17, bottom: 17),
-                                  child: Column(
-                                    children: [
-                                      showListText(
-                                          text: "1000",
-                                          fontSize: 15.sp,
-                                          color: index.isEven
-                                              ? Colors.red
-                                              : Colors.green),
-                                      Spacer(),
-                                      showListText(
-                                          text: "You will give",
-                                          color: Colors.black.withOpacity(0.3)),
-                                    ],
-                                  ),
-                                )
-                              ]),
+                child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection("mobile_number")
+                  .snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasData) {
+                  ///GetData
+                  final doc = snapshot.data!.docs;
+                  return ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: doc.length,
+                    itemBuilder: (context, index) {
+                      ///GetData
+                      final getData = doc[index];
+
+                      return Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: InkWell(
+                          onTap: () {
+                            Get.to(CustomerData(
+                              name: "${getData["firstName"]}",
+                            ));
+                          },
+                          child: Container(
+                            color: ColorPicker.lightContainerColor,
+                            height: 65.sp,
+                            width: Get.width,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 10.0, right: 10),
+                              child: Row(
+                                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      height: 50.sp,
+                                      width: 50.sp,
+                                      decoration: BoxDecoration(
+                                        color: ColorPicker.grey,
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                    CommonSizeBox.commonSize(width: 20.sp),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 17, bottom: 17),
+                                      child: Column(
+                                        children: [
+                                          showListText(
+                                              text: "${getData["firstName"]}",
+                                              fontSize: 15.sp,
+                                              color: Colors.black
+                                                  .withOpacity(0.5)),
+                                          Spacer(),
+                                          showListText(
+                                              text: "time",
+                                              color: Colors.black
+                                                  .withOpacity(0.3)),
+                                        ],
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 17, bottom: 17),
+                                      child: Column(
+                                        children: [
+                                          showListText(
+                                              text: "1000",
+                                              fontSize: 15.sp,
+                                              color: index.isEven
+                                                  ? Colors.red
+                                                  : Colors.green),
+                                          Spacer(),
+                                          showListText(
+                                              text: "You will give",
+                                              color: Colors.black
+                                                  .withOpacity(0.3)),
+                                        ],
+                                      ),
+                                    )
+                                  ]),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   );
-                },
-              ),
-            )
+                } else {
+                  return CircularProgressIndicator();
+                }
+              },
+            ))
           ],
         ));
   }

@@ -10,7 +10,9 @@ import 'package:sizer/sizer.dart';
 import '../../common/button.dart';
 
 class EntryDetailsScreen extends StatefulWidget {
-  const EntryDetailsScreen({Key? key}) : super(key: key);
+  final name;
+
+  const EntryDetailsScreen({super.key, required this.name});
 
   @override
   State<EntryDetailsScreen> createState() => _EntryDetailsScreenState();
@@ -62,7 +64,7 @@ class _EntryDetailsScreenState extends State<EntryDetailsScreen> {
                       Column(
                         children: [
                           CommonText.simpleText(
-                            text: "Kishan malani",
+                            text: "${widget.name}",
                             fontSize: 15.sp,
                             color: Colors.grey,
                           ),

@@ -1,13 +1,19 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:safe_khata_book/common/app_bar.dart';
 import 'package:safe_khata_book/common/color.dart';
 import 'package:safe_khata_book/common/common_sizebox.dart';
 import 'package:safe_khata_book/common/custom_textField.dart';
+import 'package:safe_khata_book/common/preferences_manager.dart';
 import 'package:safe_khata_book/common/text.dart';
+import 'package:safe_khata_book/common/text_style.dart';
 import 'package:sizer/sizer.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../common/button.dart';
+import 'calander.dart';
 
 class EditEntryScreen extends StatefulWidget {
   const EditEntryScreen({Key? key}) : super(key: key);
@@ -19,17 +25,38 @@ class EditEntryScreen extends StatefulWidget {
 class _EditEntryScreenState extends State<EditEntryScreen> {
   TextEditingController amountController = TextEditingController();
   TextEditingController detailsController = TextEditingController();
+  DateTime selectedDate = DateTime.now();
 
   ///Calender
-  CalendarFormat _calendarFormat = CalendarFormat.month;
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
+  Future<Null> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        initialDatePickerMode: DatePickerMode.day,
+        firstDate: DateTime(2015),
+        lastDate: DateTime(2101));
+    if (picked != null)
+      setState(() {
+        selectedDate = picked;
+        print("selectedDate$selectedDate");
+      });
+  }
+
+  @override
+  void initState() {
+    print("PrefeValue${PreferencesManager.getYouGave()}");
+    // TODO: implement initState
+    super.initState();
+  }
 
   ///Calender
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppBar.appBarCenterNameAndBackArrow(
+          color: PreferencesManager.getYouGave() == 'youGave'
+              ? ColorPicker.red
+              : ColorPicker.green,
           text: "You Got \$ 440 from kishan"),
       body: Column(
         children: [
@@ -47,7 +74,9 @@ class _EditEntryScreenState extends State<EditEntryScreen> {
                     textInputType: TextInputType.number,
                     prefixIcon: Icon(
                       Icons.currency_rupee,
-                      color: ColorPicker.grey,
+                      color: PreferencesManager.getYouGave() == 'youGave'
+                          ? ColorPicker.red
+                          : ColorPicker.green,
                     )),
               )
             ]),
@@ -76,7 +105,9 @@ class _EditEntryScreenState extends State<EditEntryScreen> {
               children: [
                 ///Date Time Picker
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    _selectDate(context);
+                  },
                   child: Container(
                     height: 40.sp,
                     width: 130.sp,
@@ -86,13 +117,17 @@ class _EditEntryScreenState extends State<EditEntryScreen> {
                         children: [
                           Icon(
                             Icons.calendar_month,
-                            color: ColorPicker.grey,
+                            color: PreferencesManager.getYouGave() == 'youGave'
+                                ? ColorPicker.red
+                                : ColorPicker.green,
                           ),
                           CommonText.simpleText(
                               text: "date time now", color: ColorPicker.grey),
                           Icon(
                             Icons.arrow_drop_down,
-                            color: ColorPicker.grey,
+                            color: PreferencesManager.getYouGave() == 'youGave'
+                                ? ColorPicker.red
+                                : ColorPicker.green,
                           )
                         ]),
                   ),
@@ -108,7 +143,9 @@ class _EditEntryScreenState extends State<EditEntryScreen> {
                       children: [
                         Icon(
                           Icons.camera_alt,
-                          color: ColorPicker.grey,
+                          color: PreferencesManager.getYouGave() == 'youGave'
+                              ? ColorPicker.red
+                              : ColorPicker.green,
                         ),
                         CommonText.simpleText(
                             text: "Attach bills", color: ColorPicker.grey),
@@ -118,9 +155,16 @@ class _EditEntryScreenState extends State<EditEntryScreen> {
             ),
           ),
           Spacer(),
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: CommonButton.commonButton(text: "SAVE"),
+          InkWell(
+            onTap: () {},
+            child: Padding(
+                padding: EdgeInsets.all(10),
+                child: CommonButton.commonButton123(
+                  text: "SAVE",
+                  color: PreferencesManager.getYouGave() == 'youGave'
+                      ? ColorPicker.red
+                      : ColorPicker.green,
+                )),
           )
         ],
       ),

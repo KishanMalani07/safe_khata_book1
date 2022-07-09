@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../view/parties/calender.dart';
+import '../view/parties/calander.dart';
 
 class FontTextStyle {
   static TextStyle kWhite17W400Roboto = TextStyle(
