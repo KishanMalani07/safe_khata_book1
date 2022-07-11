@@ -11,7 +11,9 @@ import 'package:safe_khata_book/view/parties/customer_data_screen.dart';
 import 'package:sizer/sizer.dart';
 
 class PartiesScreen extends StatefulWidget {
-  const PartiesScreen({Key? key}) : super(key: key);
+  const PartiesScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<PartiesScreen> createState() => _PartiesScreenState();
@@ -179,6 +181,7 @@ class _PartiesScreenState extends State<PartiesScreen> {
                 if (snapshot.hasData) {
                   ///GetData
                   final doc = snapshot.data!.docs;
+
                   return ListView.builder(
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
@@ -186,12 +189,14 @@ class _PartiesScreenState extends State<PartiesScreen> {
                     itemBuilder: (context, index) {
                       ///GetData
                       final getData = doc[index];
+                      print("IIIIIIIDDDDDDD${getData.id}");
 
                       return Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: InkWell(
                           onTap: () {
                             Get.to(CustomerData(
+                              uid: getData.id,
                               name: "${getData["firstName"]}",
                             ));
                           },
@@ -260,7 +265,9 @@ class _PartiesScreenState extends State<PartiesScreen> {
                     },
                   );
                 } else {
-                  return CircularProgressIndicator();
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
                 }
               },
             ))

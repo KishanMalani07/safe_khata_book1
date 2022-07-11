@@ -1,12 +1,17 @@
 import 'package:flutter/cupertino.dart';
 
 class CommonText {
-  static simpleText({fontSize, String? text, color, fontWeight, textAlign}) {
+  static simpleText(
+      {fontSize, String? text, color, fontWeight, textAlign, overflow}) {
     return Text(
       text!,
       textAlign: textAlign,
-      style:
-          TextStyle(fontSize: fontSize, color: color, fontWeight: fontWeight),
+      overflow: overflow,
+      style: TextStyle(
+        fontSize: fontSize,
+        color: color,
+        fontWeight: fontWeight,
+      ),
     );
   }
 }

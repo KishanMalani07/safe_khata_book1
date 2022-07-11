@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:safe_khata_book/common/app_bar.dart';
 import 'package:safe_khata_book/common/color.dart';
 import 'package:safe_khata_book/common/common_sizebox.dart';
@@ -19,6 +20,9 @@ class EntryDetailsScreen extends StatefulWidget {
 }
 
 class _EntryDetailsScreenState extends State<EntryDetailsScreen> {
+  /// Date format
+  final f = new DateFormat('dd-MM-yyyy hh:mm');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,7 +73,7 @@ class _EntryDetailsScreenState extends State<EntryDetailsScreen> {
                             color: Colors.grey,
                           ),
                           CommonText.simpleText(
-                              text: "${DateTime.now()}",
+                              text: "${f.format(DateTime.now())}",
                               fontSize: 7.sp,
                               color: ColorPicker.grey)
                         ],

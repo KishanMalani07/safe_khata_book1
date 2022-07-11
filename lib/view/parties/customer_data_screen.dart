@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:safe_khata_book/common/app_bar.dart';
 import 'package:safe_khata_book/common/button.dart';
 import 'package:safe_khata_book/common/color.dart';
@@ -15,8 +16,9 @@ import '../../common/common_sizebox.dart';
 
 class CustomerData extends StatefulWidget {
   final name;
+  final uid;
 
-  const CustomerData({super.key, required this.name});
+  const CustomerData({super.key, required this.name, this.uid});
 
   @override
   State<CustomerData> createState() => _CustomerDataState();
@@ -24,13 +26,41 @@ class CustomerData extends StatefulWidget {
 
 class _CustomerDataState extends State<CustomerData> {
   @override
+  void initState() {
+    getTime(time) {
+      if (DateTime.now().difference(time).inMinutes < 2) {
+        return "a few seconds ago";
+      } else if (DateTime.now().difference(time).inMinutes < 60) {
+        return "${DateTime.now().difference(time).inHours} min";
+      } else if (DateTime.now().difference(time).inMinutes < 1440) {
+        return "${DateTime.now().difference(time).inHours} hours";
+      } else if (DateTime.now().difference(time).inMinutes > 1440) {
+        return "${DateTime.now().difference(time).inDays} days";
+      }
+    }
+
+    // print("getTime${getTime(DateTime.now())}");
+
+    // TODO: implement initState
+    super.initState();
+  }
+
+  /// Date format
+  final f = new DateFormat('dd-MM-yyyy hh:mm');
+
+  @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream:
-          FirebaseFirestore.instance.collection("mobile_number").snapshots(),
+      stream: FirebaseFirestore.instance
+          .collection("mobile_number")
+          .doc(widget.uid)
+          .collection("user_data")
+          .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData) {
           final data = snapshot.data!.docs;
+
+          print("datalenght${data.length}");
 
           return Scaffold(
             bottomNavigationBar: Container(
@@ -42,7 +72,10 @@ class _CustomerDataState extends State<CustomerData> {
                     InkWell(
                       onTap: () async {
                         await PreferencesManager.setYouGave("youGave");
-                        Get.to(EditEntryScreen());
+                        Get.to(EditEntryScreen(
+                          id: widget.uid,
+                          bool: false,
+                        ));
                       },
                       child: CommonButton.commonYouGaveButton(
                           text: "YOU GAVE \$", color: Colors.red),
@@ -50,7 +83,10 @@ class _CustomerDataState extends State<CustomerData> {
                     InkWell(
                       onTap: () async {
                         await PreferencesManager.setYouGave("youGot");
-                        Get.to(EditEntryScreen());
+                        Get.to(EditEntryScreen(
+                          bool: true,
+                          id: widget.uid,
+                        ));
                       },
                       child: CommonButton.commonYouGaveButton(
                           text: "YOU GOT \$", color: ColorPicker.green),
@@ -208,9 +244,12 @@ class _CustomerDataState extends State<CustomerData> {
               Expanded(
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,
+
                   shrinkWrap: true,
-                  itemCount: 10,
+                  // itemCount: 5,
+                  itemCount: data.length,
                   itemBuilder: (context, index) {
+                    print("dataid${data[index].id}");
                     return Padding(
                       padding: const EdgeInsets.all(5.0),
                       child: InkWell(
@@ -234,7 +273,9 @@ class _CustomerDataState extends State<CustomerData> {
                                   children: [
                                     CommonSizeBox.commonSize(height: 4.sp),
                                     showListText(
-                                        text: "${DateTime.now()}",
+                                        text:
+                                            "${f.format(DateTime.parse(data[index]["date_time"]))}",
+                                        // "${DateTime.parse(data[index]["date_time"])}",
                                         color: Colors.black.withOpacity(0.4),
                                         fontSize: 8.sp),
                                     CommonSizeBox.commonSize(height: 5.sp),
@@ -246,7 +287,8 @@ class _CustomerDataState extends State<CustomerData> {
                                         alignment: Alignment.centerLeft,
                                         child: Center(
                                             child: showListText(
-                                                text: "Bal \$ 10000 ",
+                                                text:
+                                                    "Bal \$${data[index]["gave_&_got_amount"]} ",
                                                 fontSize: 8.sp,
                                                 color: Colors.black
                                                     .withOpacity(0.4))),
@@ -264,14 +306,19 @@ class _CustomerDataState extends State<CustomerData> {
                               height: Get.height,
                               child: Center(
                                   child: showListText(
-                                      text: "\$ 100",
+                                      text: data[index]["balance_value"] ==
+                                              false
+                                          ? "${data[index]["gave_&_got_amount"]}"
+                                          : "",
                                       color: ColorPicker.red,
                                       fontSize: 14.sp)),
                               width: 85.sp,
                               color: ColorPicker.lightContainerColor,
                             ),
                             showListText(
-                                text: "\$ 10000000",
+                                text: data[index]["balance_value"] == true
+                                    ? "${data[index]["gave_&_got_amount"]}"
+                                    : "",
                                 color: ColorPicker.green,
                                 fontSize: 14.sp)
                           ]),
@@ -284,7 +331,9 @@ class _CustomerDataState extends State<CustomerData> {
             ]),
           );
         } else {
-          return CircularProgressIndicator();
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         }
       },
     );

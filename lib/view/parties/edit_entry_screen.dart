@@ -1,22 +1,27 @@
-import 'dart:collection';
-
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:safe_khata_book/common/app_bar.dart';
 import 'package:safe_khata_book/common/color.dart';
 import 'package:safe_khata_book/common/common_sizebox.dart';
 import 'package:safe_khata_book/common/custom_textField.dart';
 import 'package:safe_khata_book/common/preferences_manager.dart';
 import 'package:safe_khata_book/common/text.dart';
-import 'package:safe_khata_book/common/text_style.dart';
 import 'package:sizer/sizer.dart';
-import 'package:table_calendar/table_calendar.dart';
-
 import '../../common/button.dart';
-import 'calander.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class EditEntryScreen extends StatefulWidget {
-  const EditEntryScreen({Key? key}) : super(key: key);
+  final id;
+  final bool;
+  const EditEntryScreen({
+    super.key,
+    this.id,
+    this.bool,
+  });
 
   @override
   State<EditEntryScreen> createState() => _EditEntryScreenState();
@@ -38,13 +43,71 @@ class _EditEntryScreenState extends State<EditEntryScreen> {
     if (picked != null)
       setState(() {
         selectedDate = picked;
+
         print("selectedDate$selectedDate");
       });
+  }
+
+  /// Date format
+  final f = new DateFormat('dd-MM-yyyy hh:mm');
+
+  ///==========FutureMethod======///
+
+  File? _image;
+  final picker = ImagePicker();
+
+  final ImagePicker _picker = ImagePicker();
+
+  Future getGalleryImage() async {
+    var imageGa = await picker.getImage(source: ImageSource.gallery);
+    setState(() {
+      if (imageGa != null) {
+        _image = File(imageGa.path);
+        print("=============ImagePath0==========${imageGa.path}");
+        imageCache.clear();
+      } else {
+        print('no image selected');
+      }
+    });
+  }
+
+  Future getCamaroImage() async {
+    // var imaGe = await picker.getImage(source: ImageSource.camera);
+    final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
+    print("==========ImagePath1=============${photo!.path}");
+    setState(() {
+      if (photo != null) {
+        _image = File(
+          photo.path,
+        );
+        print("===========ImagePath============${_image}");
+        print("=============ImagePath==========${photo.path}");
+
+        imageCache.clear();
+      } else {
+        print('no image selected');
+      }
+    });
+  }
+
+  Future<dynamic> uploadImageToFirebase(
+      {required BuildContext contex, String? fileName, file}) async {
+    try {
+      var response = await firebase_storage.FirebaseStorage.instance
+          .ref('uploads/$fileName')
+          .putFile(file!);
+      print("Response>>>>>>>>>>>>>>>>>>$response");
+
+      return response.storage.ref('uploads/$fileName').getDownloadURL();
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
   void initState() {
     print("PrefeValue${PreferencesManager.getYouGave()}");
+
     // TODO: implement initState
     super.initState();
   }
@@ -110,7 +173,7 @@ class _EditEntryScreenState extends State<EditEntryScreen> {
                   },
                   child: Container(
                     height: 40.sp,
-                    width: 130.sp,
+                    width: 150.sp,
                     color: ColorPicker.lightContainerColor,
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -122,7 +185,9 @@ class _EditEntryScreenState extends State<EditEntryScreen> {
                                 : ColorPicker.green,
                           ),
                           CommonText.simpleText(
-                              text: "date time now", color: ColorPicker.grey),
+                              text: "${f.format(selectedDate)}",
+                              color: ColorPicker.grey,
+                              overflow: TextOverflow.visible),
                           Icon(
                             Icons.arrow_drop_down,
                             color: PreferencesManager.getYouGave() == 'youGave'
@@ -141,22 +206,111 @@ class _EditEntryScreenState extends State<EditEntryScreen> {
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Icon(
-                          Icons.camera_alt,
-                          color: PreferencesManager.getYouGave() == 'youGave'
-                              ? ColorPicker.red
-                              : ColorPicker.green,
+                        GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => SimpleDialog(
+                                children: [
+                                  Container(
+                                    height: 150,
+                                    width: double.infinity,
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          child: MaterialButton(
+                                            child: Text(
+                                              'gallery',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20),
+                                            ),
+                                            onPressed: () {
+                                              Get.back();
+                                              getGalleryImage();
+                                            },
+                                          ),
+                                          width: 220,
+                                          height: 60,
+                                          color: ColorPicker.grey,
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Container(
+                                          child: MaterialButton(
+                                            child: Text(
+                                              'camera',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20),
+                                            ),
+                                            // color: Colors.deepOrange,
+                                            onPressed: () {
+                                              Get.back();
+                                              getCamaroImage();
+                                            },
+                                          ),
+                                          width: 220,
+                                          height: 60,
+                                          color: ColorPicker.grey,
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                          child: Icon(
+                            Icons.camera_alt,
+                            color: PreferencesManager.getYouGave() == 'youGave'
+                                ? ColorPicker.red
+                                : ColorPicker.green,
+                          ),
                         ),
-                        CommonText.simpleText(
-                            text: "Attach bills", color: ColorPicker.grey),
+                        Container(
+                          height: 50,
+                          width: 60,
+                          color: Colors.transparent,
+                          child: _image == null
+                              ? Center(
+                                  child: CommonText.simpleText(
+                                      text: "Attach bills",
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
+                                      color: ColorPicker.grey),
+                                )
+                              : Image.file(_image!),
+                        ),
                       ]),
                 )
               ],
             ),
           ),
+
           Spacer(),
           InkWell(
-            onTap: () {},
+            onTap: () async {
+              String url = await uploadImageToFirebase(
+                      contex: context, file: _image, fileName: "demo") ??
+                  '';
+
+              FirebaseFirestore.instance
+                  .collection("mobile_number")
+                  .doc(widget.id)
+                  .collection("user_data")
+                  .add({
+                "gave_&_got_amount":
+                    amountController.text.isEmpty ? "" : amountController.text,
+                "details": detailsController.text.isEmpty
+                    ? ''
+                    : detailsController.text,
+                "date_time": selectedDate.toString(),
+                "image_url": url,
+                "check_value": ""
+              }).then((value) => Get.back());
+            },
             child: Padding(
                 padding: EdgeInsets.all(10),
                 child: CommonButton.commonButton123(

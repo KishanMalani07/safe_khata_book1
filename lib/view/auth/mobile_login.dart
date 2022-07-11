@@ -46,7 +46,7 @@ class _MobileAuthScreenState extends State<MobileAuthScreen> {
         showLoading = false;
       });
 
-      if (authCredential?.user != null) {
+      if (authCredential.user != null) {
         DocumentReference doc = FirebaseFirestore.instance
             .collection("contact")
             .doc(FirebaseAuth.instance.currentUser!.uid);
