@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,6 +18,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 class EditEntryScreen extends StatefulWidget {
   final id;
   final bool;
+
   const EditEntryScreen({
     super.key,
     this.id,
@@ -106,8 +108,6 @@ class _EditEntryScreenState extends State<EditEntryScreen> {
 
   @override
   void initState() {
-    print("PrefeValue${PreferencesManager.getYouGave()}");
-
     // TODO: implement initState
     super.initState();
   }
@@ -293,22 +293,21 @@ class _EditEntryScreenState extends State<EditEntryScreen> {
           InkWell(
             onTap: () async {
               String url = await uploadImageToFirebase(
-                      contex: context, file: _image, fileName: "demo") ??
-                  '';
+                      contex: context,
+                      file: _image,
+                      fileName: "${Random().nextInt(1234)}") ??
+                  "";
 
               FirebaseFirestore.instance
                   .collection("mobile_number")
                   .doc(widget.id)
                   .collection("user_data")
                   .add({
-                "gave_&_got_amount":
-                    amountController.text.isEmpty ? "" : amountController.text,
-                "details": detailsController.text.isEmpty
-                    ? ''
-                    : detailsController.text,
+                "gave_&_got_amount": amountController.text,
+                "details": detailsController.text,
                 "date_time": selectedDate.toString(),
                 "image_url": url,
-                "check_value": ""
+                "check_value": widget.bool
               }).then((value) => Get.back());
             },
             child: Padding(

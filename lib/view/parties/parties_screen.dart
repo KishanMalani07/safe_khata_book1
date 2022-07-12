@@ -10,6 +10,8 @@ import 'package:safe_khata_book/common/custom_textField.dart';
 import 'package:safe_khata_book/view/parties/customer_data_screen.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../c_widget/widget.dart';
+
 class PartiesScreen extends StatefulWidget {
   const PartiesScreen({
     Key? key,
@@ -189,7 +191,7 @@ class _PartiesScreenState extends State<PartiesScreen> {
                     itemBuilder: (context, index) {
                       ///GetData
                       final getData = doc[index];
-                      print("IIIIIIIDDDDDDD${getData.id}");
+                      print("IIIIIIIDDDDDDD===>>>${getData.id}");
 
                       return Padding(
                         padding: const EdgeInsets.all(5.0),
@@ -286,17 +288,6 @@ class _PartiesScreenState extends State<PartiesScreen> {
   viewReportText({@required String? text, Color? color, fontSize}) {
     return Text(
       '${text ?? 0}',
-      style: TextStyle(
-        fontSize: fontSize,
-        color: color,
-        fontWeight: FontWeight.w900,
-      ),
-    );
-  }
-
-  showListText({@required String? text, Color? color, fontSize}) {
-    return Text(
-      "${text ?? 0}",
       style: TextStyle(
         fontSize: fontSize,
         color: color,

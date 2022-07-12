@@ -12,13 +12,18 @@ import 'package:safe_khata_book/view/parties/edit_entry_screen.dart';
 import 'package:safe_khata_book/view/parties/entry_details_screen.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../c_widget/widget.dart';
 import '../../common/common_sizebox.dart';
 
 class CustomerData extends StatefulWidget {
   final name;
   final uid;
 
-  const CustomerData({super.key, required this.name, this.uid});
+  const CustomerData({
+    super.key,
+    required this.name,
+    this.uid,
+  });
 
   @override
   State<CustomerData> createState() => _CustomerDataState();
@@ -26,27 +31,16 @@ class CustomerData extends StatefulWidget {
 
 class _CustomerDataState extends State<CustomerData> {
   @override
-  void initState() {
-    getTime(time) {
-      if (DateTime.now().difference(time).inMinutes < 2) {
-        return "a few seconds ago";
-      } else if (DateTime.now().difference(time).inMinutes < 60) {
-        return "${DateTime.now().difference(time).inHours} min";
-      } else if (DateTime.now().difference(time).inMinutes < 1440) {
-        return "${DateTime.now().difference(time).inHours} hours";
-      } else if (DateTime.now().difference(time).inMinutes > 1440) {
-        return "${DateTime.now().difference(time).inDays} days";
-      }
-    }
-
-    // print("getTime${getTime(DateTime.now())}");
-
-    // TODO: implement initState
-    super.initState();
-  }
+  List removeAdd = [];
 
   /// Date format
   final f = new DateFormat('dd-MM-yyyy hh:mm');
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,12 +49,17 @@ class _CustomerDataState extends State<CustomerData> {
           .collection("mobile_number")
           .doc(widget.uid)
           .collection("user_data")
+          .orderBy("date_time", descending: true)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData) {
           final data = snapshot.data!.docs;
+          // for (int i = 0; i < data.length; i++) {
+          //   var a = data[i];
+          //   print("bnkcdj$a");
+          // }
 
-          print("datalenght${data.length}");
+          print("data_length in doc==>>${data.length}");
 
           return Scaffold(
             bottomNavigationBar: Container(
@@ -72,6 +71,7 @@ class _CustomerDataState extends State<CustomerData> {
                     InkWell(
                       onTap: () async {
                         await PreferencesManager.setYouGave("youGave");
+
                         Get.to(EditEntryScreen(
                           id: widget.uid,
                           bool: false,
@@ -84,8 +84,8 @@ class _CustomerDataState extends State<CustomerData> {
                       onTap: () async {
                         await PreferencesManager.setYouGave("youGot");
                         Get.to(EditEntryScreen(
-                          bool: true,
                           id: widget.uid,
+                          bool: true,
                         ));
                       },
                       child: CommonButton.commonYouGaveButton(
@@ -130,12 +130,20 @@ class _CustomerDataState extends State<CustomerData> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             CommonText.simpleText(
-                                text: 'You will give',
+                                text:
+                                    // data[0]["check_value"] == false
+                                    //     ?
+                                    'You will gave',
+                                // : "You will got",
                                 color: ColorPicker.grey,
                                 fontSize: 13.sp),
                             CommonText.simpleText(
-                                text: '\$ 10000000',
-                                color: ColorPicker.green,
+                                text: '\$ 1000',
+                                color:
+                                    // data[0]["check_value"] == false
+                                    //     ?
+                                    ColorPicker.red,
+                                // : ColorPicker.green,
                                 fontSize: 15.sp,
                                 fontWeight: FontWeight.w500)
                           ]),
@@ -244,12 +252,13 @@ class _CustomerDataState extends State<CustomerData> {
               Expanded(
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,
-
                   shrinkWrap: true,
-                  // itemCount: 5,
                   itemCount: data.length,
                   itemBuilder: (context, index) {
-                    print("dataid${data[index].id}");
+                    removeAdd.add("${data[index]["gave_&_got_amount"]}");
+
+                    print("showListData${removeAdd}");
+
                     return Padding(
                       padding: const EdgeInsets.all(5.0),
                       child: InkWell(
@@ -259,12 +268,14 @@ class _CustomerDataState extends State<CustomerData> {
                           ));
                         },
                         child: Container(
+                          // color: ColorPicker.red,
                           color: ColorPicker.lightContainerColor,
                           height: 75.sp,
                           width: Get.width,
+
                           child: Row(children: [
                             Container(
-                              width: 125.sp,
+                              width: 80.sp,
                               // color: Colors.red,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -275,7 +286,6 @@ class _CustomerDataState extends State<CustomerData> {
                                     showListText(
                                         text:
                                             "${f.format(DateTime.parse(data[index]["date_time"]))}",
-                                        // "${DateTime.parse(data[index]["date_time"])}",
                                         color: Colors.black.withOpacity(0.4),
                                         fontSize: 8.sp),
                                     CommonSizeBox.commonSize(height: 5.sp),
@@ -295,19 +305,58 @@ class _CustomerDataState extends State<CustomerData> {
                                       ),
                                     ),
                                     CommonSizeBox.commonSize(height: 5.sp),
-                                    showListText(
-                                        text: "2 hours ago",
-                                        color: Colors.black.withOpacity(0.6)),
+                                    Container(
+                                      height: 23.sp,
+                                      width: 70.sp,
+                                      // color: ColorPicker.green,
+                                      child: Align(
+                                        alignment: Alignment.topLeft,
+                                        child: showListText(
+                                            maxline: 2,
+                                            text: data[index]["details"] != null
+                                                ? "${data[index]["details"]} "
+                                                : "",
+                                            fontSize: 8.sp,
+                                            color:
+                                                Colors.black.withOpacity(0.4)),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
                             ),
                             Container(
+                                height: Get.height,
+                                width: 30.sp,
+                                // color: Colors.red,
+                                child: Column(
+                                  children: [
+                                    Spacer(),
+                                    Container(
+                                        height: 50.sp,
+                                        width: 30.sp,
+
+                                        // color: Colors.blue,
+                                        child:
+                                            // data[index]["image_url"] != null
+                                            //     ?
+                                            Image.network(
+                                          "${data[index]["image_url"]}",
+                                          fit: BoxFit.contain,
+                                          errorBuilder: (contex, ex, st) {
+                                            return SizedBox();
+                                          },
+                                        )
+                                        // : SizedBox()
+                                        ),
+                                    CommonSizeBox.commonSize(height: 14.0)
+                                  ],
+                                )),
+                            Container(
                               height: Get.height,
                               child: Center(
                                   child: showListText(
-                                      text: data[index]["balance_value"] ==
-                                              false
+                                      text: data[index]["check_value"] == false
                                           ? "${data[index]["gave_&_got_amount"]}"
                                           : "",
                                       color: ColorPicker.red,
@@ -315,12 +364,19 @@ class _CustomerDataState extends State<CustomerData> {
                               width: 85.sp,
                               color: ColorPicker.lightContainerColor,
                             ),
-                            showListText(
-                                text: data[index]["balance_value"] == true
-                                    ? "${data[index]["gave_&_got_amount"]}"
-                                    : "",
-                                color: ColorPicker.green,
-                                fontSize: 14.sp)
+                            Expanded(
+                              child: Container(
+                                height: Get.height,
+                                child: Center(
+                                    child: showListText(
+                                        text: data[index]["check_value"] == true
+                                            ? "${data[index]["gave_&_got_amount"]}"
+                                            : "",
+                                        color: ColorPicker.green,
+                                        fontSize: 14.sp)),
+                                color: Colors.transparent,
+                              ),
+                            ),
                           ]),
                         ),
                       ),
@@ -336,17 +392,6 @@ class _CustomerDataState extends State<CustomerData> {
           );
         }
       },
-    );
-  }
-
-  showListText({@required String? text, Color? color, fontSize, fontWeight}) {
-    return Text(
-      "${text ?? 0}",
-      style: TextStyle(
-        fontSize: fontSize,
-        color: color,
-        fontWeight: fontWeight,
-      ),
     );
   }
 }
