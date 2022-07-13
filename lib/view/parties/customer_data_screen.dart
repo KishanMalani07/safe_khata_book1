@@ -30,14 +30,16 @@ class CustomerData extends StatefulWidget {
 }
 
 class _CustomerDataState extends State<CustomerData> {
+  num finalSum = 0;
+  num finalRemove = 0;
   @override
-  List removeAdd = [];
 
   /// Date format
   final f = new DateFormat('dd-MM-yyyy hh:mm');
 
   @override
   void initState() {
+    setState(() {});
     // TODO: implement initState
     super.initState();
   }
@@ -54,13 +56,22 @@ class _CustomerDataState extends State<CustomerData> {
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData) {
           final data = snapshot.data!.docs;
-          // for (int i = 0; i < data.length; i++) {
-          //   var a = data[i];
-          //   print("bnkcdj$a");
-          // }
 
           print("data_length in doc==>>${data.length}");
 
+          print("showListData${data}");
+          finalSum = 0;
+          finalRemove = 0;
+          for (var i = 0; i < data.length; i++) {
+            if (data[i]["check_value"] == true) {
+              finalSum += num.parse(data[i]["gave_&_got_amount"]);
+            } else {
+              finalRemove += num.parse(data[i]["gave_&_got_amount"]);
+            }
+          }
+
+          print("finalsum$finalSum");
+          print("finalRemove$finalRemove");
           return Scaffold(
             bottomNavigationBar: Container(
               height: 60.sp,
@@ -130,20 +141,16 @@ class _CustomerDataState extends State<CustomerData> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             CommonText.simpleText(
-                                text:
-                                    // data[0]["check_value"] == false
-                                    //     ?
-                                    'You will gave',
-                                // : "You will got",
+                                text: finalSum > finalRemove
+                                    ? 'You will got'
+                                    : "You will gave",
                                 color: ColorPicker.grey,
                                 fontSize: 13.sp),
                             CommonText.simpleText(
-                                text: '\$ 1000',
-                                color:
-                                    // data[0]["check_value"] == false
-                                    //     ?
-                                    ColorPicker.red,
-                                // : ColorPicker.green,
+                                text: '\$ ${finalSum - finalRemove}',
+                                color: finalSum > finalRemove
+                                    ? ColorPicker.green
+                                    : ColorPicker.red,
                                 fontSize: 15.sp,
                                 fontWeight: FontWeight.w500)
                           ]),
@@ -255,9 +262,10 @@ class _CustomerDataState extends State<CustomerData> {
                   shrinkWrap: true,
                   itemCount: data.length,
                   itemBuilder: (context, index) {
-                    removeAdd.add("${data[index]["gave_&_got_amount"]}");
-
-                    print("showListData${removeAdd}");
+                    // removeAdd.insert(index, {
+                    //   "amount": num.parse(data[index]["gave_&_got_amount"]),
+                    //   "check_value": data[index]["check_value"]
+                    // });
 
                     return Padding(
                       padding: const EdgeInsets.all(5.0),
@@ -364,6 +372,14 @@ class _CustomerDataState extends State<CustomerData> {
                               width: 85.sp,
                               color: ColorPicker.lightContainerColor,
                             ),
+                            // TextButton(
+                            //     onPressed: () {
+                            //       setState(() {
+                            //         print("1");
+                            //         getSumData();
+                            //       });
+                            //     },
+                            //     child: Text("textButton")),
                             Expanded(
                               child: Container(
                                 height: Get.height,
