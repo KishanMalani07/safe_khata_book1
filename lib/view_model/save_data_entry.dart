@@ -1,12 +1,19 @@
 import 'package:get/get.dart';
 
 class SaveDataEntryController extends GetxController {
-  List _saveData = [];
+  String? _saveAmount;
 
-  List get saveData => _saveData;
+  String get saveAmount => _saveAmount!;
 
-  set saveData(List value) {
-    _saveData = value;
-    update();
+  set saveAmount(String value) {
+    _saveAmount = value;
+  }
+
+  String? _saveStatusCheck;
+
+  String get saveStatusCheck => _saveStatusCheck!;
+
+  set saveStatusCheck(String value) {
+    _saveStatusCheck = value;
   }
 }

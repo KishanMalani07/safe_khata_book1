@@ -9,20 +9,23 @@ import 'package:safe_khata_book/common/color.dart';
 import 'package:safe_khata_book/common/preferences_manager.dart';
 import 'package:safe_khata_book/common/text.dart';
 import 'package:safe_khata_book/view/parties/edit_entry_screen.dart';
-import 'package:safe_khata_book/view/parties/entry_details_screen.dart';
+import 'package:safe_khata_book/view/parties/up_date_details_screen.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../c_widget/widget.dart';
 import '../../common/common_sizebox.dart';
+import '../../view_model/save_data_entry.dart';
 
 class CustomerData extends StatefulWidget {
   final name;
   final uid;
+  final totalAmount;
 
   const CustomerData({
     super.key,
     required this.name,
     this.uid,
+    this.totalAmount,
   });
 
   @override
@@ -30,19 +33,14 @@ class CustomerData extends StatefulWidget {
 }
 
 class _CustomerDataState extends State<CustomerData> {
+  SaveDataEntryController saveData = Get.find();
+
   num finalSum = 0;
   num finalRemove = 0;
   @override
 
   /// Date format
   final f = new DateFormat('dd-MM-yyyy hh:mm');
-
-  @override
-  void initState() {
-    setState(() {});
-    // TODO: implement initState
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +58,8 @@ class _CustomerDataState extends State<CustomerData> {
           print("data_length in doc==>>${data.length}");
 
           print("showListData${data}");
+
+          /// index vise index
           finalSum = 0;
           finalRemove = 0;
           for (var i = 0; i < data.length; i++) {
@@ -69,9 +69,11 @@ class _CustomerDataState extends State<CustomerData> {
               finalRemove += num.parse(data[i]["gave_&_got_amount"]);
             }
           }
+          var dataSave = "${finalSum - finalRemove}";
 
           print("finalsum$finalSum");
           print("finalRemove$finalRemove");
+
           return Scaffold(
             bottomNavigationBar: Container(
               height: 60.sp,
@@ -262,6 +264,9 @@ class _CustomerDataState extends State<CustomerData> {
                   shrinkWrap: true,
                   itemCount: data.length,
                   itemBuilder: (context, index) {
+                    ///All user_data Get ID
+                    final userDataId = data[index].id;
+
                     // removeAdd.insert(index, {
                     //   "amount": num.parse(data[index]["gave_&_got_amount"]),
                     //   "check_value": data[index]["check_value"]
@@ -271,8 +276,9 @@ class _CustomerDataState extends State<CustomerData> {
                       padding: const EdgeInsets.all(5.0),
                       child: InkWell(
                         onTap: () {
-                          Get.to(EntryDetailsScreen(
-                            name: widget.name,
+                          Get.to(UpDateDetailsScreen(
+                            userDataId: userDataId,
+                            id: widget.uid,
                           ));
                         },
                         child: Container(
@@ -372,14 +378,6 @@ class _CustomerDataState extends State<CustomerData> {
                               width: 85.sp,
                               color: ColorPicker.lightContainerColor,
                             ),
-                            // TextButton(
-                            //     onPressed: () {
-                            //       setState(() {
-                            //         print("1");
-                            //         getSumData();
-                            //       });
-                            //     },
-                            //     child: Text("textButton")),
                             Expanded(
                               child: Container(
                                 height: Get.height,
