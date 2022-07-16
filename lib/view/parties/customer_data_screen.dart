@@ -44,6 +44,7 @@ class _CustomerDataState extends State<CustomerData> {
 
   @override
   Widget build(BuildContext context) {
+    print("14525412541${widget.uid}");
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection("mobile_number")
@@ -266,6 +267,7 @@ class _CustomerDataState extends State<CustomerData> {
                   itemBuilder: (context, index) {
                     ///All user_data Get ID
                     final userDataId = data[index].id;
+                    // print("userDataId_userDataId123$userDataId");
 
                     // removeAdd.insert(index, {
                     //   "amount": num.parse(data[index]["gave_&_got_amount"]),
@@ -329,7 +331,7 @@ class _CustomerDataState extends State<CustomerData> {
                                             maxline: 2,
                                             text: data[index]["details"] != null
                                                 ? "${data[index]["details"]} "
-                                                : "",
+                                                : "no details",
                                             fontSize: 8.sp,
                                             color:
                                                 Colors.black.withOpacity(0.4)),

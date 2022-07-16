@@ -15,7 +15,7 @@ import 'package:sizer/sizer.dart';
 import '../../common/button.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
-import '../../common/snackBar.dart';
+import 'delete_share_screen.dart';
 
 class UpDateDetailsScreen extends StatefulWidget {
   final id;
@@ -120,6 +120,7 @@ class _UpDateDetailsScreenState extends State<UpDateDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("idddddddd${widget.id}");
     return Scaffold(
       appBar: CommonAppBar.appBarCenterNameAndBackArrow(text: ""),
       body: Column(
@@ -308,6 +309,7 @@ class _UpDateDetailsScreenState extends State<UpDateDetailsScreen> {
                 }).then((value) => Get.back());
               } else {
                 Get.showSnackbar(GetSnackBar(
+                  duration: Duration(seconds: 1),
                   message: "please enter you amount",
                 ));
               }
@@ -318,7 +320,24 @@ class _UpDateDetailsScreenState extends State<UpDateDetailsScreen> {
                   text: "UpData",
                   color: ColorPicker.grey,
                 )),
-          )
+          ),
+          CommonText.simpleText(
+              text: "OR", fontWeight: FontWeight.bold, fontSize: 15.sp),
+          InkWell(
+            onTap: () {
+              Get.to(DeleteAndShareScreen(
+                mobileNumberDocId: widget.id,
+                userDataDocId: widget.userDataId,
+              ));
+            },
+            child: Padding(
+                padding: EdgeInsets.all(10),
+                child: CommonButton.commonButton123(
+                  text: "Delete",
+                  color: ColorPicker.grey,
+                )),
+          ),
+          CommonSizeBox.commonSize(height: 5.sp)
         ],
       ),
     );
