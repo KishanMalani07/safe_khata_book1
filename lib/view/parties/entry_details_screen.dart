@@ -5,8 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:safe_khata_book/common/app_bar.dart';
 import 'package:safe_khata_book/common/color.dart';
 import 'package:safe_khata_book/common/common_sizebox.dart';
+import 'package:safe_khata_book/common/preferences_manager.dart';
 import 'package:safe_khata_book/common/text.dart';
-import 'package:safe_khata_book/view/parties/edit_entry_screen.dart';
 import 'package:safe_khata_book/view/parties/up_date_details_screen.dart';
 import 'package:safe_khata_book/view_model/save_data_entry.dart';
 import 'package:sizer/sizer.dart';
@@ -32,6 +32,9 @@ class _EntryDetailsScreenState extends State<EntryDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(
+        "EntryDetailsScreen_Preference_set_uId${PreferencesManager.getUid()}");
+
     return GetBuilder<SaveDataEntryController>(
       builder: (controller) {
         return Scaffold(
@@ -58,10 +61,7 @@ class _EntryDetailsScreenState extends State<EntryDetailsScreen> {
             body: StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection("mobile_number")
-                  .doc(FirebaseFirestore.instance
-                      .collection("mobile_number")
-                      .doc()
-                      .id)
+                  .doc(PreferencesManager.getUid())
                   .collection("user_data")
                   .snapshots(),
               builder: (BuildContext context,
@@ -190,7 +190,9 @@ class _EntryDetailsScreenState extends State<EntryDetailsScreen> {
                             CommonSizeBox.commonSize(height: 10.sp),
                             InkWell(
                               onTap: () {
-                                Get.to(UpDateDetailsScreen());
+                                Get.to(UpDateDetailsScreen(
+                                  uid: PreferencesManager.getUid(),
+                                ));
                               },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:safe_khata_book/common/app_bar.dart';
 import 'package:safe_khata_book/common/button.dart';
 import 'package:safe_khata_book/common/color.dart';
 import 'package:safe_khata_book/common/preferences_manager.dart';
@@ -54,6 +53,7 @@ class _CustomerDataState extends State<CustomerData> {
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData) {
+          print("CustomerData_uId${widget.uid}");
           final data = snapshot.data!.docs;
 
           print("data_length in doc==>>${data.length}");
@@ -87,7 +87,7 @@ class _CustomerDataState extends State<CustomerData> {
                         await PreferencesManager.setYouGave("youGave");
 
                         Get.to(EditEntryScreen(
-                          id: widget.uid,
+                          uId: widget.uid,
                           bool: false,
                         ));
                       },
@@ -98,7 +98,7 @@ class _CustomerDataState extends State<CustomerData> {
                       onTap: () async {
                         await PreferencesManager.setYouGave("youGot");
                         Get.to(EditEntryScreen(
-                          id: widget.uid,
+                          uId: widget.uid,
                           bool: true,
                         ));
                       },
@@ -107,20 +107,82 @@ class _CustomerDataState extends State<CustomerData> {
                     )
                   ]),
             ),
-            appBar: CommonAppBar.customerAppData(
-              name: "${widget.name}",
-              subName: "subName",
-              icon: Icon(
-                Icons.more_vert,
-                color: ColorPicker.whiteColor,
-              ),
-              container: Container(
-                height: 35.sp,
-                width: 35.sp,
-                decoration:
-                    BoxDecoration(color: Colors.yellow, shape: BoxShape.circle),
-              ),
-            ),
+            appBar: PreferredSize(
+                child: Container(
+                  width: Get.width,
+                  height: Get.height * 0.11,
+                  color: ColorPicker.grey,
+                  // color: ColorPicker.lightContainerColor,
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 15.0, top: 28, right: 15),
+                    child: Row(children: [
+                      InkWell(
+                        onTap: () {
+                          FirebaseFirestore.instance
+                              .collection("mobile_number")
+                              .doc(widget.uid)
+                              .update({
+                            "check_value":
+                                finalSum > finalRemove ? true : false,
+                            // "date_time": "${f.format(DateTime.now())}",
+                            "gave_&_got_amount": dataSave,
+                          });
+
+                          Get.back();
+                        },
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                        ),
+                      ),
+                      CommonSizeBox.commonSize(width: 10.sp),
+                      Container(
+                        height: 35.sp,
+                        width: 35.sp,
+                        decoration: BoxDecoration(
+                            color: Colors.yellow, shape: BoxShape.circle),
+                      ),
+                      CommonSizeBox.commonSize(width: 10.sp),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0, left: 8),
+                        child: Column(
+                          children: [
+                            CommonText.simpleText(
+                                text: widget.name,
+                                fontSize: 15.sp,
+                                color: ColorPicker.whiteColor,
+                                fontWeight: FontWeight.bold),
+                            CommonText.simpleText(
+                                text: "subName",
+                                fontSize: 10.sp,
+                                color: ColorPicker.whiteColor)
+                          ],
+                        ),
+                      ),
+                      Spacer(),
+                      Icon(
+                        Icons.more_vert,
+                        color: ColorPicker.whiteColor,
+                      ),
+                    ]),
+                  ),
+                ),
+                preferredSize: Size.fromHeight(80.sp)),
+            // appBar: CommonAppBar.customerAppData(
+            //   name: "${widget.name}",
+            //   subName: "subName",
+            //   icon: Icon(
+            //     Icons.more_vert,
+            //     color: ColorPicker.whiteColor,
+            //   ),
+            //   container: Container(
+            //     height: 35.sp,
+            //     width: 35.sp,
+            //     decoration:
+            //         BoxDecoration(color: Colors.yellow, shape: BoxShape.circle),
+            //   ),
+            // ),
             body: Column(children: [
               Container(
                 height: 50.sp,
@@ -267,7 +329,7 @@ class _CustomerDataState extends State<CustomerData> {
                   itemBuilder: (context, index) {
                     ///All user_data Get ID
                     final userDataId = data[index].id;
-                    // print("userDataId_userDataId123$userDataId");
+                    PreferencesManager.setUserData_Uid(userDataId);
 
                     // removeAdd.insert(index, {
                     //   "amount": num.parse(data[index]["gave_&_got_amount"]),
@@ -280,7 +342,7 @@ class _CustomerDataState extends State<CustomerData> {
                         onTap: () {
                           Get.to(UpDateDetailsScreen(
                             userDataId: userDataId,
-                            id: widget.uid,
+                            uid: widget.uid,
                           ));
                         },
                         child: Container(

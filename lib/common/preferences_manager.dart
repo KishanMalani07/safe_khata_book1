@@ -38,4 +38,13 @@ class PreferencesManager {
   static getYouGave() {
     return getStorage.read("youGave");
   }
+
+  ///UID
+  static Future setUserData_Uid(String user_dataUid) async {
+    await getStorage.write("user_dataUid", user_dataUid);
+  }
+
+  static getUserData_Uid() {
+    return getStorage.read("user_dataUid");
+  }
 }

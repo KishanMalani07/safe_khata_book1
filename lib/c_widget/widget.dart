@@ -4,6 +4,7 @@ showListText(
     {@required String? text,
     Color? color,
     maxline,
+    overflow,
     fontSize,
     fontWeight,
     dynamic ontap}) {
@@ -11,6 +12,7 @@ showListText(
     onTap: ontap,
     child: Text(
       "${text ?? 0}",
+      overflow: overflow,
       maxLines: maxline,
       style: TextStyle(
         fontSize: fontSize,

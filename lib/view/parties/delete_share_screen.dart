@@ -8,15 +8,13 @@ import 'package:safe_khata_book/common/color.dart';
 import 'package:safe_khata_book/common/common_sizebox.dart';
 import 'package:safe_khata_book/view/parties/parties_screen.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../common/app_bar.dart';
 
 class DeleteAndShareScreen extends StatefulWidget {
   final mobileNumberDocId;
-  final userDataDocId;
+  final uid;
 
-  const DeleteAndShareScreen(
-      {super.key, this.mobileNumberDocId, this.userDataDocId});
+  const DeleteAndShareScreen({super.key, this.mobileNumberDocId, this.uid});
 
   @override
   State<DeleteAndShareScreen> createState() => _DeleteAndShareScreenState();
@@ -25,7 +23,7 @@ class DeleteAndShareScreen extends StatefulWidget {
 class _DeleteAndShareScreenState extends State<DeleteAndShareScreen> {
   @override
   Widget build(BuildContext context) {
-    print("mobileNumberDocId${widget.mobileNumberDocId}");
+    print("DeleteAndShareScreen_uId${widget.uid}");
     return Scaffold(
         appBar: CommonAppBar.appBarCenterNameAndBackArrow(
             text: "Delete & Share", color: ColorPicker.grey),
@@ -39,10 +37,19 @@ class _DeleteAndShareScreenState extends State<DeleteAndShareScreen> {
                 onTap: () {
                   FirebaseFirestore.instance
                       .collection("mobile_number")
-                      // .doc("1uic3F3Usr4Jylnwm9C3")
+                      .doc(widget.uid)
+                      .collection("user_data")
                       .doc(widget.mobileNumberDocId)
                       .delete()
-                      .then((value) => Get.to(PartiesScreen()));
+                      .then((value) => (FirebaseFirestore.instance
+                          .collection("mobile_number")
+                          .doc(widget.uid)
+                          .delete()
+                          .then((value) => Get.showSnackbar(GetSnackBar(
+                                message: "User delete successfully",
+                                duration: Duration(seconds: 2),
+                              )))
+                          .then((value) => Get.to(PartiesScreen()))));
                 },
                 child: CommonButton.commonButton(text: "Delete"),
               ),

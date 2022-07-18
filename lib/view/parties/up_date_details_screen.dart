@@ -18,13 +18,13 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'delete_share_screen.dart';
 
 class UpDateDetailsScreen extends StatefulWidget {
-  final id;
+  final uid;
   final userDataId;
   // final bool;
 
   const UpDateDetailsScreen({
     super.key,
-    this.id,
+    this.uid,
     this.userDataId,
     // this.bool,
   });
@@ -120,7 +120,7 @@ class _UpDateDetailsScreenState extends State<UpDateDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("idddddddd${widget.id}");
+    print("UpDateDetailsScreen_uID${widget.uid}");
     return Scaffold(
       appBar: CommonAppBar.appBarCenterNameAndBackArrow(text: ""),
       body: Column(
@@ -298,7 +298,7 @@ class _UpDateDetailsScreenState extends State<UpDateDetailsScreen> {
                   amountController.text.isNotEmpty) {
                 FirebaseFirestore.instance
                     .collection("mobile_number")
-                    .doc(widget.id)
+                    .doc(widget.uid)
                     .collection("user_data")
                     .doc(widget.userDataId)
                     .update({
@@ -326,8 +326,8 @@ class _UpDateDetailsScreenState extends State<UpDateDetailsScreen> {
           InkWell(
             onTap: () {
               Get.to(DeleteAndShareScreen(
-                mobileNumberDocId: widget.id,
-                userDataDocId: widget.userDataId,
+                uid: widget.uid,
+                mobileNumberDocId: widget.userDataId,
               ));
             },
             child: Padding(

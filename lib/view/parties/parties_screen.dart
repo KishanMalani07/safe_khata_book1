@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:safe_khata_book/common/app_bar.dart';
 import 'package:safe_khata_book/common/color.dart';
 import 'package:safe_khata_book/common/common_sizebox.dart';
 import 'package:safe_khata_book/common/custom_textField.dart';
+import 'package:safe_khata_book/common/preferences_manager.dart';
 import 'package:safe_khata_book/view/parties/customer_data_screen.dart';
 import 'package:sizer/sizer.dart';
 
@@ -23,6 +25,20 @@ class PartiesScreen extends StatefulWidget {
 }
 
 class _PartiesScreenState extends State<PartiesScreen> {
+  @override
+
+  /// Date format
+  final f = new DateFormat('dd-MM-yyyy hh:mm');
+
+  upDateData() async {
+    await FirebaseFirestore.instance
+        .collection("mobile_number")
+        .doc(FirebaseFirestore.instance.collection("mobile_number").doc().id)
+        .collection("user_data")
+        .doc(PreferencesManager.getUserData_Uid())
+        .update({});
+  }
+
   SaveDataEntryController showData = Get.find();
 
   int? length;
@@ -44,10 +60,13 @@ class _PartiesScreenState extends State<PartiesScreen> {
                       await FlutterContactPicker.pickFullContact();
                   print("contact123${contact}");
 
-                  Map<String, String> getContact = {
+                  Map<String, dynamic> getContact = {
                     "firstName": "${contact.name!.firstName}",
                     "number": "${contact.phones[0].number}",
                     "profile_picture": "${contact.photo}",
+                    "check_value": false,
+                    "date_time": "${f.format(DateTime.now())}",
+                    "gave_&_got_amount": 0,
                   };
                   print("getContact-----------------$getContact");
 
@@ -178,135 +197,136 @@ class _PartiesScreenState extends State<PartiesScreen> {
                     ],
                   ),
                   StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection("mobile_number")
-                        .doc()
-                        .collection("user_data")
-                        .doc()
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      return StreamBuilder(
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      return StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection("mobile_number")
+                            .snapshots(),
                         builder: (BuildContext context,
                             AsyncSnapshot<QuerySnapshot> snapshot) {
-                          return Expanded(
-                              child: StreamBuilder<QuerySnapshot>(
-                            stream: FirebaseFirestore.instance
-                                .collection("mobile_number")
-                                .snapshots(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<QuerySnapshot> snapshot) {
-                              if (snapshot.hasData) {
-                                ///GetData
-                                final doc = snapshot.data!.docs;
+                          if (snapshot.hasData) {
+                            ///GetData
+                            final doc = snapshot.data!.docs;
 
-                                return ListView.builder(
-                                  scrollDirection: Axis.vertical,
-                                  shrinkWrap: true,
-                                  itemCount: doc.length,
-                                  itemBuilder: (context, index) {
-                                    ///GetData
-                                    final getData = doc[index];
+                            return Expanded(
+                              child: ListView.builder(
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                itemCount: doc.length,
+                                itemBuilder: (context, index) {
+                                  ///GetData
+                                  final getData = doc[index];
+                                  final getData1 = doc[index].id;
+                                  PreferencesManager.setUid(getData1);
+                                  print("PartiesScreen_Pre_uId$getData1");
 
-                                    return Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: InkWell(
-                                        onTap: () {
-                                          Get.to(CustomerData(
-                                            uid: getData.id,
-                                            name: "${getData["firstName"]}",
-                                          ));
-                                        },
-                                        child: Container(
-                                          color:
-                                              ColorPicker.lightContainerColor,
-                                          height: 65.sp,
-                                          width: Get.width,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10.0, right: 10),
-                                            child: Row(
-                                                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Container(
-                                                    height: 50.sp,
-                                                    width: 50.sp,
-                                                    decoration: BoxDecoration(
-                                                      color: ColorPicker.grey,
-                                                      shape: BoxShape.circle,
-                                                    ),
+                                  return Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: InkWell(
+                                      onTap: () {
+                                        Get.to(CustomerData(
+                                          uid: getData1,
+                                          name: "${getData["firstName"]}",
+                                        ));
+                                      },
+                                      child: Container(
+                                        color: ColorPicker.lightContainerColor,
+                                        height: 65.sp,
+                                        width: Get.width,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 10.0, right: 10),
+                                          child: Row(
+                                              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Container(
+                                                  height: 50.sp,
+                                                  width: 50.sp,
+                                                  decoration: BoxDecoration(
+                                                    color: ColorPicker.grey,
+                                                    shape: BoxShape.circle,
                                                   ),
-                                                  CommonSizeBox.commonSize(
-                                                      width: 20.sp),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 17,
-                                                            bottom: 17),
-                                                    child: Column(
-                                                      children: [
-                                                        showListText(
+                                                ),
+                                                CommonSizeBox.commonSize(
+                                                    width: 20.sp),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 17, bottom: 17),
+                                                  child: Column(
+                                                    children: [
+                                                      Container(
+                                                        height: 15.sp,
+                                                        width: 100.sp,
+                                                        // color: Colors.red,
+                                                        child: showListText(
                                                             text:
                                                                 "${getData["firstName"]}",
                                                             fontSize: 15.sp,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .visible,
+                                                            maxline: 1,
                                                             color: Colors.black
                                                                 .withOpacity(
                                                                     0.5)),
-                                                        Spacer(),
-                                                        showListText(
-                                                            text: "time",
-                                                            color: Colors.black
-                                                                .withOpacity(
-                                                                    0.3)),
-                                                      ],
-                                                    ),
+                                                      ),
+                                                      Spacer(),
+                                                      showListText(
+                                                          text:
+                                                              "${getData["date_time"]}",
+                                                          color: Colors.black
+                                                              .withOpacity(0.3))
+                                                    ],
                                                   ),
-                                                  Spacer(),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 17,
-                                                            bottom: 17),
-                                                    child: Column(
-                                                      children: [
-                                                        showListText(
-                                                          text: "1000",
-                                                          // "${controller.saveAmount}",
+                                                ),
+                                                Spacer(),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 17, bottom: 17),
+                                                  child: Column(
+                                                    children: [
+                                                      showListText(
+                                                          text:
+                                                              "${getData["gave_&_got_amount"]}",
                                                           fontSize: 15.sp,
                                                           color:
-                                                              ColorPicker.red,
-                                                          // controller.saveStatusCheck ==
-                                                          //         false
-                                                          //     ? Colors.red
-                                                          //     : Colors.green
-                                                        ),
-                                                        Spacer(),
-                                                        showListText(
-                                                            text:
-                                                                "You will give",
-                                                            // controller.saveStatusCheck ==
-                                                            //         false
-                                                            //     ? "You will give"
-                                                            //     : "You will got",
-                                                            color: Colors.black
-                                                                .withOpacity(
-                                                                    0.3)),
-                                                      ],
-                                                    ),
-                                                  )
-                                                ]),
-                                          ),
+                                                              getData["check_value"] ==
+                                                                      true
+                                                                  ? Colors.green
+                                                                  : Colors.red),
+                                                      Spacer(),
+                                                      showListText(
+                                                          text: getData[
+                                                                      "check_value"] ==
+                                                                  false
+                                                              ? "You will got"
+                                                              : "You will gave",
+                                                          color:
+                                                              getData["check_value"] ==
+                                                                      false
+                                                                  ? ColorPicker
+                                                                      .red
+                                                                  : ColorPicker
+                                                                      .green),
+                                                    ],
+                                                  ),
+                                                )
+                                              ]),
                                         ),
                                       ),
-                                    );
-                                  },
-                                );
-                              } else {
-                                return Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              }
-                            },
-                          ));
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          } else {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
                         },
                       );
                     },

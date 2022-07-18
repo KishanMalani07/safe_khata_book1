@@ -16,12 +16,12 @@ import '../../common/button.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class EditEntryScreen extends StatefulWidget {
-  final id;
+  final uId;
   final bool;
 
   const EditEntryScreen({
     super.key,
-    this.id,
+    this.uId,
     this.bool,
   });
 
@@ -115,6 +115,8 @@ class _EditEntryScreenState extends State<EditEntryScreen> {
   ///Calender
   @override
   Widget build(BuildContext context) {
+    print("EditEntryScreen_uID${widget.uId}");
+
     return Scaffold(
       appBar: CommonAppBar.appBarCenterNameAndBackArrow(
           color: PreferencesManager.getYouGave() == 'youGave'
@@ -300,7 +302,7 @@ class _EditEntryScreenState extends State<EditEntryScreen> {
 
               FirebaseFirestore.instance
                   .collection("mobile_number")
-                  .doc(widget.id)
+                  .doc(widget.uId)
                   .collection("user_data")
                   .add({
                 "gave_&_got_amount": amountController.text,
