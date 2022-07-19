@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -43,9 +44,12 @@ class _CustomerDataState extends State<CustomerData> {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesManager.setName(widget.name);
     print("14525412541${widget.uid}");
     return StreamBuilder(
       stream: FirebaseFirestore.instance
+          .collection("contact")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
           .collection("mobile_number")
           .doc(widget.uid)
           .collection("user_data")
@@ -120,13 +124,16 @@ class _CustomerDataState extends State<CustomerData> {
                       InkWell(
                         onTap: () {
                           FirebaseFirestore.instance
+                              .collection("contact")
+                              .doc(FirebaseAuth.instance.currentUser!.uid)
                               .collection("mobile_number")
                               .doc(widget.uid)
                               .update({
                             "check_value":
                                 finalSum > finalRemove ? true : false,
                             // "date_time": "${f.format(DateTime.now())}",
-                            "gave_&_got_amount": dataSave,
+                            "gave_&_got_amount":
+                                dataSave != "" ? dataSave : '0',
                           });
 
                           Get.back();

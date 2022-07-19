@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -297,6 +298,8 @@ class _UpDateDetailsScreenState extends State<UpDateDetailsScreen> {
               if (amountController.text == null ||
                   amountController.text.isNotEmpty) {
                 FirebaseFirestore.instance
+                    .collection("contact")
+                    .doc(FirebaseAuth.instance.currentUser!.uid)
                     .collection("mobile_number")
                     .doc(widget.uid)
                     .collection("user_data")
@@ -317,7 +320,7 @@ class _UpDateDetailsScreenState extends State<UpDateDetailsScreen> {
             child: Padding(
                 padding: EdgeInsets.all(10),
                 child: CommonButton.commonButton123(
-                  text: "UpData",
+                  text: "UpDate",
                   color: ColorPicker.grey,
                 )),
           ),

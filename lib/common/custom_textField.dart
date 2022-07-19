@@ -55,6 +55,7 @@ class CommonTextFiled {
       TextInputType? textInputType,
       dynamic onChange,
       Widget? prefix,
+      Widget? suffixIcon,
       required List<TextInputFormatter> inputFormatters}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -107,6 +108,7 @@ class CommonTextFiled {
       dynamic onChange,
       Widget? prefixIcon,
       Widget? prefix,
+      Widget? suffixIcon,
       required List<TextInputFormatter> inputFormatters}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -125,6 +127,8 @@ class CommonTextFiled {
           prefixStyle: TextStyle(color: ColorPicker.grey),
           prefixIcon: prefixIcon,
           prefix: prefix,
+          suffix: suffixIcon,
+          suffixStyle: TextStyle(color: ColorPicker.grey),
           isCollapsed: true,
           focusColor: ColorPicker.grey,
           hoverColor: ColorPicker.testFiledHintBorder,

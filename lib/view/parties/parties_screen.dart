@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
@@ -10,6 +11,7 @@ import 'package:safe_khata_book/common/common_sizebox.dart';
 import 'package:safe_khata_book/common/custom_textField.dart';
 import 'package:safe_khata_book/common/preferences_manager.dart';
 import 'package:safe_khata_book/view/parties/customer_data_screen.dart';
+import 'package:safe_khata_book/view/parties/view_report_screen.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../c_widget/widget.dart';
@@ -29,15 +31,12 @@ class _PartiesScreenState extends State<PartiesScreen> {
 
   /// Date format
   final f = new DateFormat('dd-MM-yyyy hh:mm');
+  TextEditingController searchController = TextEditingController();
+  String searchText = " ";
 
-  upDateData() async {
-    await FirebaseFirestore.instance
-        .collection("mobile_number")
-        .doc(FirebaseFirestore.instance.collection("mobile_number").doc().id)
-        .collection("user_data")
-        .doc(PreferencesManager.getUserData_Uid())
-        .update({});
-  }
+  ///calculation
+  num finalSum1 = 0;
+  num finalRemove1 = 0;
 
   SaveDataEntryController showData = Get.find();
 
@@ -46,12 +45,13 @@ class _PartiesScreenState extends State<PartiesScreen> {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
+          .collection("contact")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
           .collection("mobile_number")
-          .doc(FirebaseFirestore.instance.collection("mobile_number").doc().id)
-          .collection("user_data")
-          .orderBy("date_time", descending: true)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        var showAllData = snapshot.data!.docs;
+
         if (snapshot.hasData) {
           return Scaffold(
               floatingActionButton: InkWell(
@@ -69,8 +69,9 @@ class _PartiesScreenState extends State<PartiesScreen> {
                     "gave_&_got_amount": 0,
                   };
                   print("getContact-----------------$getContact");
-
                   FirebaseFirestore.instance
+                      .collection("contact")
+                      .doc(FirebaseAuth.instance.currentUser!.uid)
                       .collection("mobile_number")
                       .add(getContact);
                 },
@@ -109,11 +110,13 @@ class _PartiesScreenState extends State<PartiesScreen> {
                             child: Column(
                               children: [
                                 willGiveText(
-                                  text: "\$ 2000000",
+                                  text:
+                                      "\$ ${showAllData[0]["gave_&_got_amount"]}",
+                                  // "\$ 2000000",
                                   color: Colors.green,
                                 ),
                                 Text(
-                                  "You will give",
+                                  "You will gote",
                                   style: TextStyle(
                                       color: ColorPicker.grey,
                                       fontSize: 11.sp,
@@ -135,9 +138,11 @@ class _PartiesScreenState extends State<PartiesScreen> {
                             child: Column(
                               children: [
                                 willGiveText(
-                                    text: "\$ 1000000", color: Colors.red),
+                                    text:
+                                        "\$ ${showAllData[0]["gave_&_got_amount"]}",
+                                    color: Colors.red),
                                 Text(
-                                  "You will gate",
+                                  "You will gave",
                                   style: TextStyle(
                                       color: ColorPicker.grey,
                                       fontSize: 11.sp,
@@ -157,11 +162,15 @@ class _PartiesScreenState extends State<PartiesScreen> {
                         width: Get.width,
                         color: ColorPicker.lightContainerColor,
                         child: Center(
+                            child: InkWell(
+                          onTap: () {
+                            Get.to(ViewReportScreen());
+                          },
                           child: viewReportText(
                               text: ("View Report"),
                               color: ColorPicker.grey,
                               fontSize: 15.sp),
-                        )),
+                        ))),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -171,7 +180,14 @@ class _PartiesScreenState extends State<PartiesScreen> {
                         child: SizedBox(
                             width: 180.sp,
                             child: CommonTextFiled.otpTextFiled(
+                                controller: searchController,
+                                onChange: (value) {
+                                  setState(() {
+                                    searchText = value;
+                                  });
+                                },
                                 hintText: "Search",
+                                suffixIcon: Icon(Icons.clear),
                                 prefix: SizedBox(width: 15),
                                 inputFormatters: [],
                                 textInputType: TextInputType.text)),
@@ -196,147 +212,183 @@ class _PartiesScreenState extends State<PartiesScreen> {
                       ),
                     ],
                   ),
-                  StreamBuilder(
+                  StreamBuilder<QuerySnapshot>(
+                    stream: searchController.text.isEmpty
+                        ? FirebaseFirestore.instance
+                            .collection("contact")
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                            .collection("mobile_number")
+                            .orderBy("date_time", descending: true)
+                            .snapshots()
+                        : FirebaseFirestore.instance
+                            .collection("contact")
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                            .collection("mobile_number")
+                            .where('firstName',
+                                isGreaterThanOrEqualTo: searchController.text)
+                            .snapshots(),
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
-                      return StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection("mobile_number")
-                            .snapshots(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (snapshot.hasData) {
-                            ///GetData
-                            final doc = snapshot.data!.docs;
+                      if (snapshot.hasData) {
+                        /// DECALARE THIS SNAPSHOT.HASHDATA AFTER
+                        var doc = snapshot.data!.docs;
+                        print("length======>${doc.length}");
+                        print("Text======>${searchText}");
 
-                            return Expanded(
-                              child: ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                itemCount: doc.length,
-                                itemBuilder: (context, index) {
-                                  ///GetData
-                                  final getData = doc[index];
-                                  final getData1 = doc[index].id;
-                                  PreferencesManager.setUid(getData1);
-                                  print("PartiesScreen_Pre_uId$getData1");
+                        return Expanded(
+                          child: ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            itemCount: doc.length,
+                            itemBuilder: (context, index) {
+                              ///GetData
+                              // final getData = doc[index];
+                              final getData1 = doc[index].id;
+                              PreferencesManager.setUid(getData1);
+                              print("PartiesScreen_Pre_uId$doc");
 
-                                  return Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: InkWell(
-                                      onTap: () {
-                                        Get.to(CustomerData(
-                                          uid: getData1,
-                                          name: "${getData["firstName"]}",
-                                        ));
-                                      },
-                                      child: Container(
-                                        color: ColorPicker.lightContainerColor,
-                                        height: 65.sp,
-                                        width: Get.width,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 10.0, right: 10),
-                                          child: Row(
-                                              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Container(
-                                                  height: 50.sp,
-                                                  width: 50.sp,
-                                                  decoration: BoxDecoration(
-                                                    color: ColorPicker.grey,
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                ),
-                                                CommonSizeBox.commonSize(
-                                                    width: 20.sp),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 17, bottom: 17),
-                                                  child: Column(
-                                                    children: [
-                                                      Container(
-                                                        height: 15.sp,
-                                                        width: 100.sp,
-                                                        // color: Colors.red,
-                                                        child: showListText(
-                                                            text:
-                                                                "${getData["firstName"]}",
-                                                            fontSize: 15.sp,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .visible,
-                                                            maxline: 1,
-                                                            color: Colors.black
-                                                                .withOpacity(
-                                                                    0.5)),
-                                                      ),
-                                                      Spacer(),
-                                                      showListText(
-                                                          text:
-                                                              "${getData["date_time"]}",
-                                                          color: Colors.black
-                                                              .withOpacity(0.3))
-                                                    ],
-                                                  ),
-                                                ),
-                                                Spacer(),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 17, bottom: 17),
-                                                  child: Column(
-                                                    children: [
-                                                      showListText(
-                                                          text:
-                                                              "${getData["gave_&_got_amount"]}",
-                                                          fontSize: 15.sp,
-                                                          color:
-                                                              getData["check_value"] ==
-                                                                      true
-                                                                  ? Colors.green
-                                                                  : Colors.red),
-                                                      Spacer(),
-                                                      showListText(
-                                                          text: getData[
-                                                                      "check_value"] ==
-                                                                  false
-                                                              ? "You will got"
-                                                              : "You will gave",
-                                                          color:
-                                                              getData["check_value"] ==
-                                                                      false
-                                                                  ? ColorPicker
-                                                                      .red
-                                                                  : ColorPicker
-                                                                      .green),
-                                                    ],
-                                                  ),
-                                                )
-                                              ]),
-                                        ),
+                              return Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: InkWell(
+                                  onTap: () {
+                                    Get.to(CustomerData(
+                                      uid: getData1,
+                                      name: "${doc[index]["firstName"]}",
+                                    ));
+                                  },
+                                  child: Dismissible(
+                                    direction: DismissDirection.startToEnd,
+                                    background: Container(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 28),
+                                      color: ColorPicker.red,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Icon(
+                                            Icons.delete,
+                                            color: ColorPicker.whiteColor,
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  );
-                                },
-                              ),
-                            );
-                          } else {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                        },
-                      );
+                                    onDismissed: (direction) {
+                                      FirebaseFirestore.instance
+                                          .collection("contact")
+                                          .doc(FirebaseAuth
+                                              .instance.currentUser!.uid)
+                                          .collection("mobile_number")
+                                          .doc(doc[index].id)
+                                          .delete()
+                                          .then((value) =>
+                                              Get.showSnackbar(GetSnackBar(
+                                                duration: Duration(seconds: 2),
+                                                message:
+                                                    "successfully user delete",
+                                              )));
+                                    },
+                                    key: ValueKey("${doc[index]["firstName"]}"),
+                                    child: Container(
+                                      color: ColorPicker.lightContainerColor,
+                                      height: 65.sp,
+                                      width: Get.width,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 10.0, right: 10),
+                                        child: Row(
+                                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Container(
+                                                height: 50.sp,
+                                                width: 50.sp,
+                                                decoration: BoxDecoration(
+                                                  color: ColorPicker.grey,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                              ),
+                                              CommonSizeBox.commonSize(
+                                                  width: 20.sp),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 17, bottom: 17),
+                                                child: Column(
+                                                  children: [
+                                                    Container(
+                                                      height: 15.sp,
+                                                      width: 100.sp,
+                                                      // color: Colors.red,
+                                                      child: showListText(
+                                                          text:
+                                                              "${doc[index]["firstName"]}",
+                                                          fontSize: 15.sp,
+                                                          overflow: TextOverflow
+                                                              .visible,
+                                                          maxline: 1,
+                                                          color: Colors.black
+                                                              .withOpacity(
+                                                                  0.5)),
+                                                    ),
+                                                    Spacer(),
+                                                    showListText(
+                                                        text:
+                                                            "${doc[index]["date_time"]}",
+                                                        color: Colors.black
+                                                            .withOpacity(0.3))
+                                                  ],
+                                                ),
+                                              ),
+                                              Spacer(),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 17, bottom: 17),
+                                                child: Column(
+                                                  children: [
+                                                    showListText(
+                                                        text:
+                                                            "${doc[index]["gave_&_got_amount"]}",
+                                                        fontSize: 15.sp,
+                                                        color: doc[index][
+                                                                    "check_value"] ==
+                                                                true
+                                                            ? Colors.green
+                                                            : Colors.red),
+                                                    Spacer(),
+                                                    showListText(
+                                                        text: doc[index][
+                                                                    "check_value"] ==
+                                                                false
+                                                            ? "You will got"
+                                                            : "You will gave",
+                                                        color: doc[index][
+                                                                    "check_value"] ==
+                                                                false
+                                                            ? ColorPicker.red
+                                                            : ColorPicker
+                                                                .green),
+                                                  ],
+                                                ),
+                                              )
+                                            ]),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
                     },
                   )
                 ],
               ));
         } else {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return Center(child: CircularProgressIndicator());
         }
       },
     );

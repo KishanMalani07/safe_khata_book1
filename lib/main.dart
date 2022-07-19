@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +13,7 @@ import 'package:safe_khata_book/view/parties/calander.dart';
 import 'package:safe_khata_book/view/parties/customer_data_screen.dart';
 import 'package:safe_khata_book/view/parties/edit_entry_screen.dart';
 import 'package:safe_khata_book/view/parties/entry_details_screen.dart';
+import 'package:safe_khata_book/view/parties/view_report_screen.dart';
 
 import 'package:safe_khata_book/view_model/bottom_controller.dart';
 import 'package:sizer/sizer.dart';
@@ -36,15 +38,13 @@ void main() async {
   // await GetStorage.init();
 
   ///firebase initiallize
-  runApp(MyApp(
-    uid: uid,
-  ));
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  final uid;
-
-  const MyApp({super.key, required this.uid});
+  const MyApp({
+    super.key,
+  });
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -61,8 +61,10 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: Colors.blue,
         ),
 
-        // home: widget.uid == null ? MobileAuthScreen() : BottomBarScreen(),
-        // home: LogicScreen(),
+        // home: FirebaseAuth.instance.currentUser?.uid == null
+        //     ? MobileAuthScreen()
+        //     : BottomBarScreen(),
+        // home: ViewReportScreen(),
         home: BottomBarScreen(),
         // home: CustomerData(),
 

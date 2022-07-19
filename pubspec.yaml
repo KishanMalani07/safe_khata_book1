@@ -57,7 +57,9 @@ dependencies:
   #camere & gallery
   image_picker: ^0.8.5+3
   dio: ^4.0.0
-
+  #share
+  flutter_share: ^2.0.0
+  file_picker:
 
 
 

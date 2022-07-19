@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -301,6 +302,8 @@ class _EditEntryScreenState extends State<EditEntryScreen> {
                   "";
 
               FirebaseFirestore.instance
+                  .collection("contact")
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
                   .collection("mobile_number")
                   .doc(widget.uId)
                   .collection("user_data")
