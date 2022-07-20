@@ -54,6 +54,7 @@ dependencies:
   #calander
   table_calendar: ^3.0.6
   intl: ^0.17.0
+  calendar_date_picker2: ^0.2.2
   #camere & gallery
   image_picker: ^0.8.5+3
   dio: ^4.0.0

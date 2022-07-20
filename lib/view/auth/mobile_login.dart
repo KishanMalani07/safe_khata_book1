@@ -109,7 +109,6 @@ class _MobileAuthScreenState extends State<MobileAuthScreen> {
                   showLoading = false;
                 });
 
-                PreferencesManager.setMobileNumber("${phoneController.text}");
                 print(
                     "getMobileNumber==>${PreferencesManager.getMobileNumber()}");
 

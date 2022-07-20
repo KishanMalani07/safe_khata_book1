@@ -61,11 +61,11 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: Colors.blue,
         ),
 
-        // home: FirebaseAuth.instance.currentUser?.uid == null
-        //     ? MobileAuthScreen()
-        //     : BottomBarScreen(),
+        home: FirebaseAuth.instance.currentUser?.uid == null
+            ? MobileAuthScreen()
+            : BottomBarScreen(),
         // home: ViewReportScreen(),
-        home: BottomBarScreen(),
+        // home: BottomBarScreen(),
         // home: CustomerData(),
 
         // home: VerifyOtpScreen(),
