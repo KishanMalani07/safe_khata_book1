@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/bindings_interface.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:safe_khata_book/common/preferences_manager.dart';
 import 'package:safe_khata_book/logic%20screen.dart';
 import 'package:safe_khata_book/view/auth/mobile_login.dart';
 import 'package:safe_khata_book/view/bottom_bar/bottom_bar_screen.dart';
@@ -61,7 +62,7 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: Colors.blue,
         ),
 
-        home: FirebaseAuth.instance.currentUser?.uid == null
+        home: PreferencesManager.getUid() != null
             ? MobileAuthScreen()
             : BottomBarScreen(),
         // home: ViewReportScreen(),

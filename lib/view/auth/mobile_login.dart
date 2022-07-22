@@ -56,7 +56,7 @@ class _MobileAuthScreenState extends State<MobileAuthScreen> {
 
         print("findDocId$findDocId");
         PreferencesManager.setUid("$findDocId");
-        // print(" PreferencesManager${PreferencesManager.getUid()}");
+        print(" ContactPreferencesManager${PreferencesManager.getUid()}");
 
         Navigator.push(
             context,

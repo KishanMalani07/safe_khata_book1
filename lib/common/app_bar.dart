@@ -25,7 +25,7 @@ class CommonAppBar {
       title: Text(name!,
           style: TextStyle(
               fontWeight: FontWeight.w800,
-              color: ColorPicker.grey,
+              color: ColorPicker.black,
               fontSize: 25)),
     );
   }
@@ -98,5 +98,42 @@ class CommonAppBar {
           ),
         ),
         preferredSize: Size.fromHeight(80.sp));
+  }
+
+  static containerAppData({dynamic ontap}) {
+    return PreferredSize(
+        child: Container(
+          width: Get.width,
+          height: Get.height * 0.11,
+          color: ColorPicker.whiteColor,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10.0, right: 20),
+            child: Row(children: [
+              InkWell(
+                onTap: ontap,
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.book_online_rounded,
+                      color: ColorPicker.black,
+                    ),
+                    CommonText.simpleText(
+                        text: "Name", color: ColorPicker.black),
+                    Icon(
+                      Icons.arrow_drop_down,
+                      color: ColorPicker.black,
+                    ),
+                  ],
+                ),
+              ),
+              Spacer(),
+              Icon(
+                Icons.settings,
+                color: ColorPicker.black,
+              )
+            ]),
+          ),
+        ),
+        preferredSize: Size.fromHeight(30.sp));
   }
 }

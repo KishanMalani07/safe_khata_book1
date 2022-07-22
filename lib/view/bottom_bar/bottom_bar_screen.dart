@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:safe_khata_book/common/color.dart';
-import 'package:safe_khata_book/view/money/money_screen%5D.dart';
 import 'package:safe_khata_book/view/more/more_screen.dart';
 import 'package:safe_khata_book/view/parties/parties_screen.dart';
 import 'package:safe_khata_book/view_model/bottom_controller.dart';
 import 'package:sizer/sizer.dart';
+
+import '../money/money_screen.dart';
 
 List<Widget> tabPage = [PartiesScreen(), MoneyScreen(), MoreScreen()];
 List<Map<String, dynamic>> bottomBarData = [
@@ -95,9 +96,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                             fit: BoxFit.cover,
                           ),
                         ),
-                        SizedBox(
-                          height: 6,
-                        ),
+                        Spacer(),
                         Text(
                           "${e["title"]}",
                           style: TextStyle(

@@ -73,7 +73,7 @@ class CommonTextFiled {
           prefixStyle: TextStyle(),
           prefix: prefix,
           isCollapsed: true,
-          focusColor: ColorPicker.grey,
+          focusColor: ColorPicker.black,
           hoverColor: ColorPicker.testFiledHintBorder,
           enabledBorder: OutlineInputBorder(
             borderSide:
@@ -92,7 +92,7 @@ class CommonTextFiled {
           hintText: hintText,
           contentPadding: EdgeInsets.symmetric(vertical: 10.sp),
           hintStyle: TextStyle(
-            color: ColorPicker.grey,
+            color: ColorPicker.black,
             fontWeight: FontWeight.w400,
             fontSize: 10.sp,
           ),

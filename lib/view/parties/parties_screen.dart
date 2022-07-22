@@ -33,6 +33,7 @@ class _PartiesScreenState extends State<PartiesScreen> {
         .collection("contact")
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
+    PreferencesManager.setUid(FirebaseAuth.instance.currentUser!.uid);
 
     Map<String, dynamic>? info = data.data();
 
@@ -180,7 +181,7 @@ class _PartiesScreenState extends State<PartiesScreen> {
                     },
                     child: viewReportText(
                         text: ("View Report"),
-                        color: ColorPicker.grey,
+                        color: ColorPicker.black,
                         fontSize: 15.sp),
                   ))),
             ),
@@ -324,7 +325,7 @@ class _PartiesScreenState extends State<PartiesScreen> {
                                             children: [
                                               Container(
                                                 height: 15.sp,
-                                                width: 100.sp,
+                                                width: 80.sp,
                                                 // color: Colors.red,
                                                 child: showListText(
                                                     text:
@@ -333,15 +334,14 @@ class _PartiesScreenState extends State<PartiesScreen> {
                                                     overflow:
                                                         TextOverflow.visible,
                                                     maxline: 1,
-                                                    color: Colors.black
-                                                        .withOpacity(0.5)),
+                                                    color: Colors.black),
                                               ),
                                               Spacer(),
                                               showListText(
                                                   text:
                                                       "${doc[index]["date_time"]}",
                                                   color: Colors.black
-                                                      .withOpacity(0.3))
+                                                      .withOpacity(0.5))
                                             ],
                                           ),
                                         ),
@@ -386,6 +386,7 @@ class _PartiesScreenState extends State<PartiesScreen> {
                   );
                 } else {
                   return Center(
+                    // child: Text("No Data Found"),
                     child: CircularProgressIndicator(),
                   );
                 }
