@@ -31,6 +31,7 @@ void main() async {
 
   ///
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    // statusBarColor: Colors.transparent,
     statusBarColor: Colors.white.withOpacity(1),
     statusBarBrightness: Brightness.light,
     statusBarIconBrightness: Brightness.dark,
@@ -62,7 +63,7 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: Colors.blue,
         ),
 
-        home: PreferencesManager.getUid() != null
+        home: PreferencesManager.getUid() == null
             ? MobileAuthScreen()
             : BottomBarScreen(),
         // home: ViewReportScreen(),

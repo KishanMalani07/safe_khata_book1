@@ -33,7 +33,7 @@ class _PartiesScreenState extends State<PartiesScreen> {
         .collection("contact")
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
-    PreferencesManager.setUid(FirebaseAuth.instance.currentUser!.uid);
+    // PreferencesManager.setUid(FirebaseAuth.instance.currentUser!.uid);
 
     Map<String, dynamic>? info = data.data();
 
@@ -42,6 +42,18 @@ class _PartiesScreenState extends State<PartiesScreen> {
       print("mobileNumber_mobileNumber$number");
     });
   }
+
+  ///===============CHAT_ROOM_ID=================>>>
+  String? chatRoomId({String? user1, String? user2}) {
+    if (user1![0].toLowerCase().codeUnits[0] >
+        user2![0].toLowerCase().codeUnits[0]) {
+      return "$user1$user2";
+    } else {
+      return "$user2$user1";
+    }
+  }
+
+  Map<String, dynamic>? userMap;
 
   /// Date format
   final f = new DateFormat('dd-MM-yyyy hh:mm');
@@ -65,6 +77,7 @@ class _PartiesScreenState extends State<PartiesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("CURRENT_USER_SET_uid${PreferencesManager.getUid()}");
     return Scaffold(
         floatingActionButton: InkWell(
           onTap: () async {
@@ -79,6 +92,7 @@ class _PartiesScreenState extends State<PartiesScreen> {
               "check_value": true,
               "date_time": "${f.format(DateTime.now())}",
               "gave_&_got_amount": 0,
+              "message_status": "Online"
             };
             print("getContact-----------------$getContact");
 
@@ -242,6 +256,8 @@ class _PartiesScreenState extends State<PartiesScreen> {
                       .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
+                print("1111222333_GET_MOBILE_UID");
+
                 if (snapshot.hasData) {
                   /// DECALARE THIS SNAPSHOT.HASHDATA AFTER
                   var doc = snapshot.data!.docs;
@@ -255,16 +271,16 @@ class _PartiesScreenState extends State<PartiesScreen> {
                       itemCount: doc.length,
                       itemBuilder: (context, index) {
                         ///GetData
-                        // final getData = doc[index];
                         final getData1 = doc[index].id;
-                        PreferencesManager.setUid(getData1);
-                        print("PartiesScreen_Pre_uId$doc");
+                        PreferencesManager.set_Get_Mobile_Uid(getData1);
 
                         return Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: InkWell(
                             onTap: () {
                               Get.to(CustomerData(
+                                userMap: userMap,
+                                chatRoomId: getData1,
                                 uid: getData1,
                                 name: "${doc[index]["firstName"]}",
                               ));

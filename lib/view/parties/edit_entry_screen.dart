@@ -312,7 +312,8 @@ class _EditEntryScreenState extends State<EditEntryScreen> {
                 "details": detailsController.text,
                 "date_time": selectedDate.toString(),
                 "image_url": url,
-                "check_value": widget.bool
+                "check_value": widget.bool,
+                "message_status": "Online",
               }).then((value) => Get.back());
             },
             child: Padding(

@@ -56,4 +56,13 @@ class PreferencesManager {
   static getName() {
     return getStorage.read("name");
   }
+
+  ///Get Mobile Number User Id
+  static Future set_Get_Mobile_Uid(String MobileUid) async {
+    await getStorage.write("MobileUid", MobileUid);
+  }
+
+  static get_Get_Mobile_Uid() {
+    return getStorage.read("MobileUid");
+  }
 }

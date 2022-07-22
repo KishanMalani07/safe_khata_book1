@@ -50,13 +50,16 @@ class _MobileAuthScreenState extends State<MobileAuthScreen> {
         DocumentReference doc = FirebaseFirestore.instance
             .collection("contact")
             .doc(FirebaseAuth.instance.currentUser!.uid);
-        doc.set({"mobileNumber": phoneController.text});
+        doc.set({
+          "mobileNumber": phoneController.text,
+          "message_status": "Online",
+        });
 
         var findDocId = doc.id;
 
         print("findDocId$findDocId");
         PreferencesManager.setUid("$findDocId");
-        print(" ContactPreferencesManager${PreferencesManager.getUid()}");
+        print("CONTACT_PREFERENCE_SET_uid${PreferencesManager.getUid()}");
 
         Navigator.push(
             context,

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -5,6 +6,8 @@ import 'package:safe_khata_book/common/color.dart';
 import 'package:safe_khata_book/common/common_sizebox.dart';
 import 'package:safe_khata_book/common/text.dart';
 import 'package:sizer/sizer.dart';
+
+import '../auth/mobile_login.dart';
 
 class MoreScreen extends StatefulWidget {
   const MoreScreen({Key? key}) : super(key: key);
@@ -205,6 +208,12 @@ class _MoreScreenState extends State<MoreScreen> {
         ///collection pending money
 
         Spacer(),
+        InkWell(
+          onTap: () {
+            FirebaseAuth.instance.signOut().then((value) => MobileAuthScreen());
+          },
+          child: CommonText.simpleText(text: "SignOut"),
+        ),
         CommonText.simpleText(
             text:
                 "All payments are 100% Safe and Secure on \n\n                       SAFEKHATABOOK",

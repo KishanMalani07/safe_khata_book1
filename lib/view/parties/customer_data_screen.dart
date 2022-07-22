@@ -10,6 +10,7 @@ import 'package:safe_khata_book/common/preferences_manager.dart';
 import 'package:safe_khata_book/common/text.dart';
 import 'package:safe_khata_book/view/parties/edit_entry_screen.dart';
 import 'package:safe_khata_book/view/parties/up_date_details_screen.dart';
+import 'package:safe_khata_book/view/whatssp/message_room.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../c_widget/widget.dart';
@@ -20,12 +21,16 @@ class CustomerData extends StatefulWidget {
   final name;
   final uid;
   final totalAmount;
+  final chatRoomId;
+  final userMap;
 
   const CustomerData({
     super.key,
     required this.name,
     this.uid,
     this.totalAmount,
+    this.chatRoomId,
+    this.userMap,
   });
 
   @override
@@ -119,7 +124,7 @@ class _CustomerDataState extends State<CustomerData> {
                   // color: ColorPicker.lightContainerColor,
                   child: Padding(
                     padding:
-                        const EdgeInsets.only(left: 15.0, top: 28, right: 15),
+                        const EdgeInsets.only(left: 15.0, top: 25, right: 15),
                     child: Row(children: [
                       InkWell(
                         onTap: () {
@@ -152,22 +157,29 @@ class _CustomerDataState extends State<CustomerData> {
                       ),
                       CommonSizeBox.commonSize(width: 10.sp),
                       Padding(
-                        padding: const EdgeInsets.only(top: 10.0, left: 8),
-                        child: Column(
-                          children: [
-                            CommonText.simpleText(
-                                text: widget.name,
-                                fontSize: 15.sp,
-                                color: ColorPicker.whiteColor,
-                                fontWeight: FontWeight.bold),
-                            CommonText.simpleText(
-                                text: "subName",
-                                fontSize: 10.sp,
-                                color: ColorPicker.whiteColor)
-                          ],
-                        ),
+                        padding: const EdgeInsets.only(top: 0.0, left: 8),
+                        child: CommonText.simpleText(
+                            text: widget.name,
+                            fontSize: 15.sp,
+                            color: ColorPicker.whiteColor,
+                            fontWeight: FontWeight.bold),
                       ),
                       Spacer(),
+                      InkWell(
+                        onTap: () {
+                          Get.to(MessageRoomScreen(
+                            chatRoomId: widget.chatRoomId,
+                            userMap: widget.userMap,
+                            name: widget.name,
+                          ));
+                        },
+                        child: Icon(
+                          Icons.whatsapp,
+                          color: ColorPicker.whiteColor,
+                          size: 25.sp,
+                        ),
+                      ),
+                      CommonSizeBox.commonSize(width: 10.sp),
                       Icon(
                         Icons.more_vert,
                         color: ColorPicker.whiteColor,
@@ -176,20 +188,6 @@ class _CustomerDataState extends State<CustomerData> {
                   ),
                 ),
                 preferredSize: Size.fromHeight(80.sp)),
-            // appBar: CommonAppBar.customerAppData(
-            //   name: "${widget.name}",
-            //   subName: "subName",
-            //   icon: Icon(
-            //     Icons.more_vert,
-            //     color: ColorPicker.whiteColor,
-            //   ),
-            //   container: Container(
-            //     height: 35.sp,
-            //     width: 35.sp,
-            //     decoration:
-            //         BoxDecoration(color: Colors.yellow, shape: BoxShape.circle),
-            //   ),
-            // ),
             body: Column(children: [
               Container(
                 height: 50.sp,
