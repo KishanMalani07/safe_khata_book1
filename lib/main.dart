@@ -23,23 +23,18 @@ import 'view_model/save_data_entry.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  ///firebase initialize
   await Firebase.initializeApp();
+  await GetStorage.init();
 
-  /// check this already user login
-  final getStorage = GetStorage();
-  final uid = getStorage.read('uid');
-
-  ///
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     // statusBarColor: Colors.transparent,
     statusBarColor: Colors.white.withOpacity(1),
     statusBarBrightness: Brightness.light,
     statusBarIconBrightness: Brightness.dark,
   ));
-  await Firebase.initializeApp();
-  // await GetStorage.init();
 
-  ///firebase initiallize
   runApp(MyApp());
 }
 
@@ -69,8 +64,6 @@ class _MyAppState extends State<MyApp> {
         // home: ViewReportScreen(),
         // home: BottomBarScreen(),
         // home: CustomerData(),
-
-        // home: VerifyOtpScreen(),
       ),
     );
   }

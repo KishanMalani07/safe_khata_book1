@@ -15,22 +15,19 @@ import 'package:sizer/sizer.dart';
 
 import '../../c_widget/widget.dart';
 import '../../common/common_sizebox.dart';
-import '../../view_model/save_data_entry.dart';
 
 class CustomerData extends StatefulWidget {
   final name;
   final uid;
   final totalAmount;
-  final chatRoomId;
-  final userMap;
+  final roomId;
 
   const CustomerData({
     super.key,
     required this.name,
     this.uid,
     this.totalAmount,
-    this.chatRoomId,
-    this.userMap,
+    this.roomId,
   });
 
   @override
@@ -38,8 +35,6 @@ class CustomerData extends StatefulWidget {
 }
 
 class _CustomerDataState extends State<CustomerData> {
-  SaveDataEntryController saveData = Get.find();
-
   num finalSum = 0;
   num finalRemove = 0;
   @override
@@ -167,9 +162,10 @@ class _CustomerDataState extends State<CustomerData> {
                       Spacer(),
                       InkWell(
                         onTap: () {
+                          ///send to chatRoomId
+
                           Get.to(MessageRoomScreen(
-                            chatRoomId: widget.chatRoomId,
-                            userMap: widget.userMap,
+                            chatRoomId: widget.roomId,
                             name: widget.name,
                           ));
                         },

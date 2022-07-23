@@ -28,32 +28,24 @@ class PartiesScreen extends StatefulWidget {
 class _PartiesScreenState extends State<PartiesScreen> {
   @override
   var number;
-  getData() async {
-    var data = await FirebaseFirestore.instance
-        .collection("contact")
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get();
-    // PreferencesManager.setUid(FirebaseAuth.instance.currentUser!.uid);
-
-    Map<String, dynamic>? info = data.data();
-
-    setState(() {
-      number = info!["mobileNumber"];
-      print("mobileNumber_mobileNumber$number");
-    });
-  }
 
   ///===============CHAT_ROOM_ID=================>>>
-  String? chatRoomId({String? user1, String? user2}) {
-    if (user1![0].toLowerCase().codeUnits[0] >
-        user2![0].toLowerCase().codeUnits[0]) {
-      return "$user1$user2";
+  // String chatRoomId({String? user1, String? user2}) {
+  //   if (user1![0].toLowerCase().codeUnits[0] >
+  //       user2![0].toLowerCase().codeUnits[0]) {
+  //     return "$user1$user2";
+  //   } else {
+  //     return "$user2$user1";
+  //   }
+  // }
+  Future<String> chatRoomId(String user1, String user2) async {
+    if (user1[0].toLowerCase().codeUnitAt(0) >
+        user2.toLowerCase().codeUnitAt(0)) {
+      return '$user1$user2';
     } else {
-      return "$user2$user1";
+      return '$user2$user1';
     }
   }
-
-  Map<String, dynamic>? userMap;
 
   /// Date format
   final f = new DateFormat('dd-MM-yyyy hh:mm');
@@ -67,13 +59,6 @@ class _PartiesScreenState extends State<PartiesScreen> {
   SaveDataEntryController showData = Get.find();
 
   int? length;
-
-  @override
-  void initState() {
-    getData();
-    // TODO: implement initState
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -277,13 +262,16 @@ class _PartiesScreenState extends State<PartiesScreen> {
                         return Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: InkWell(
-                            onTap: () {
-                              Get.to(CustomerData(
-                                userMap: userMap,
-                                chatRoomId: getData1,
-                                uid: getData1,
-                                name: "${doc[index]["firstName"]}",
-                              ));
+                            onTap: () async {
+                              String? roomId = await chatRoomId(
+                                  "${FirebaseAuth.instance.currentUser!.uid}",
+                                  "${doc[index]["firstName"]}");
+                              print('ROOMID$roomId');
+                              Get.to(() => CustomerData(
+                                    roomId: roomId,
+                                    uid: getData1,
+                                    name: "${doc[index]["firstName"]}",
+                                  ));
                             },
                             child: Dismissible(
                               direction: DismissDirection.startToEnd,

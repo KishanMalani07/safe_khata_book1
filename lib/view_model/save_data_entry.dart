@@ -16,4 +16,14 @@ class SaveDataEntryController extends GetxController {
   set saveStatusCheck(String value) {
     _saveStatusCheck = value;
   }
+
+  ///=====
+  String? _userMap;
+
+  String get userMap => _userMap!;
+
+  set userMap(String value) {
+    _userMap = value;
+    update();
+  }
 }
