@@ -44,8 +44,6 @@ class _CustomerDataState extends State<CustomerData> {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesManager.setName(widget.name);
-    print("14525412541${widget.uid}");
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection("contact")

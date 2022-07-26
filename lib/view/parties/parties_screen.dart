@@ -62,7 +62,11 @@ class _PartiesScreenState extends State<PartiesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("CURRENT_USER_SET_uid${PreferencesManager.getUid()}");
+    print("CURRENT_USER_SET_uid_PartiesScreen${PreferencesManager.getUid()}");
+    print(
+        "PREFERENCE_PROFILE_PICTURE_PartiesScreen${PreferencesManager.getProfilePicture()}");
+    print(
+        "PREFERENCE_PROFILE_NAME_PartiesScreen${PreferencesManager.getName()}");
     return Scaffold(
         floatingActionButton: InkWell(
           onTap: () async {
@@ -258,19 +262,22 @@ class _PartiesScreenState extends State<PartiesScreen> {
                         ///GetData
                         final getData1 = doc[index].id;
                         PreferencesManager.set_Get_Mobile_Uid(getData1);
+                        print("111111111111111111111111$getData1");
 
                         return Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: InkWell(
                             onTap: () async {
+                              final firstName = doc[index]["firstName"];
                               String? roomId = await chatRoomId(
                                   "${FirebaseAuth.instance.currentUser!.uid}",
-                                  "${doc[index]["firstName"]}");
+                                  "${snapshot.data!.docs[index].id}");
+
                               print('ROOMID$roomId');
                               Get.to(() => CustomerData(
                                     roomId: roomId,
                                     uid: getData1,
-                                    name: "${doc[index]["firstName"]}",
+                                    name: "$firstName",
                                   ));
                             },
                             child: Dismissible(

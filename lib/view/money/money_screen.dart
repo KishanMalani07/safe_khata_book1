@@ -214,7 +214,7 @@ class _MoneyScreenState extends State<MoneyScreen> {
                     ],
                   ),
                 ),
-                CommonSizeBox.commonSize(width: 10.0),
+                Spacer(),
                 Icon(
                   Icons.arrow_right,
                   color: ColorPicker.black,

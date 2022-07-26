@@ -4,7 +4,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:safe_khata_book/common/color.dart';
 import 'package:safe_khata_book/common/common_sizebox.dart';
+import 'package:safe_khata_book/common/preferences_manager.dart';
 import 'package:safe_khata_book/common/text.dart';
+import 'package:safe_khata_book/view/profile/profile_edit_screen.dart';
 import 'package:sizer/sizer.dart';
 
 import '../auth/mobile_login.dart';
@@ -63,43 +65,45 @@ class _MoreScreenState extends State<MoreScreen> {
                 height: 40.sp,
                 width: 40.sp,
                 decoration: BoxDecoration(
-                    color: ColorPicker.grey,
+                    // color: ColorPicker.grey,
                     borderRadius: BorderRadius.circular(50)),
+                child: PreferencesManager.getProfilePicture() == null
+                    ? Image.network(
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDnAV2195eKjdsIWb9qODnuYgxUnwJ0exESA&usqp=CAU")
+                    : Image.network(PreferencesManager.getProfilePicture(),
+                        fit: BoxFit.contain),
               ),
               // CommonSizeBox.commonSize(width: 10.0),
               Padding(
                 padding: const EdgeInsets.all(18.0),
-                child: Column(
-                  children: [
-                    CommonText.simpleText(
-                        text: "Kishan",
-                        color: ColorPicker.black,
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w400),
-                    Spacer(),
-                    CommonText.simpleText(
-                        text: "kishanmlani",
-                        color: ColorPicker.black,
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.w300),
-                  ],
-                ),
+                child: CommonText.simpleText(
+                    text: PreferencesManager.getName() == null
+                        ? "Name"
+                        : "${PreferencesManager.getName()}",
+                    color: ColorPicker.black,
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w400),
               ),
               Spacer(),
-              Container(
-                height: 25.sp,
-                width: 50.sp,
-                child: Center(
-                  child: CommonText.simpleText(
-                      text: "Edit", color: ColorPicker.black),
+              InkWell(
+                onTap: () {
+                  Get.to(ProfileEditScreen());
+                },
+                child: Container(
+                  height: 25.sp,
+                  width: 50.sp,
+                  child: Center(
+                    child: CommonText.simpleText(
+                        text: "Edit", color: ColorPicker.black),
+                  ),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      // color: ColorPicker.grey,
+                      border: Border.all(
+                        color: ColorPicker.black,
+                        width: 1,
+                      )),
                 ),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    // color: ColorPicker.grey,
-                    border: Border.all(
-                      color: ColorPicker.black,
-                      width: 1,
-                    )),
               ),
             ]),
           ),
@@ -210,10 +214,14 @@ class _MoreScreenState extends State<MoreScreen> {
         Spacer(),
         InkWell(
           onTap: () {
-            FirebaseAuth.instance.signOut().then((value) => MobileAuthScreen());
+            print("SignOut User========>>>>${PreferencesManager.getUid()}");
+            FirebaseAuth.instance
+                .signOut()
+                .then((value) => Get.to(MobileAuthScreen()));
           },
-          child: CommonText.simpleText(text: "SignOut"),
+          child: CommonText.simpleText(text: "SignOut", fontSize: 15.sp),
         ),
+        CommonSizeBox.commonSize(height: 10.0),
         CommonText.simpleText(
             text:
                 "All payments are 100% Safe and Secure on \n\n                       SAFEKHATABOOK",

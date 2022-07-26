@@ -15,6 +15,7 @@ import 'package:safe_khata_book/view/parties/customer_data_screen.dart';
 import 'package:safe_khata_book/view/parties/edit_entry_screen.dart';
 import 'package:safe_khata_book/view/parties/entry_details_screen.dart';
 import 'package:safe_khata_book/view/parties/view_report_screen.dart';
+import 'package:safe_khata_book/view/profile/profile_edit_screen.dart';
 
 import 'package:safe_khata_book/view_model/bottom_controller.dart';
 import 'package:sizer/sizer.dart';
@@ -61,7 +62,7 @@ class _MyAppState extends State<MyApp> {
         home: PreferencesManager.getUid() == null
             ? MobileAuthScreen()
             : BottomBarScreen(),
-        // home: ViewReportScreen(),
+        // home: ProfileEditScreen(),
         // home: BottomBarScreen(),
         // home: CustomerData(),
       ),

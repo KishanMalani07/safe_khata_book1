@@ -26,6 +26,16 @@ class MessageRoomScreen extends StatefulWidget {
 }
 
 class _MessageRoomScreenState extends State<MessageRoomScreen> {
+  ///=====>chat message
+  String chatId(String id1, String id2) {
+    print('id1 length => ${id1.length} id2 length=> ${id2.length}');
+    if (id1.compareTo(id2) > 0) {
+      return id1 + '-' + id2;
+    } else {
+      return id2 + '-' + id1;
+    }
+  }
+
   ///============ChatRoom============///
   final GlobalKey<ScaffoldState> _key = GlobalKey();
   final _message = TextEditingController();
@@ -41,6 +51,7 @@ class _MessageRoomScreenState extends State<MessageRoomScreen> {
         "message": _message.text,
         "type": "text",
         "date_time": f.format(DateTime.now()),
+        "send_message_me": false
       };
 
       FirebaseFirestore.instance
@@ -58,13 +69,6 @@ class _MessageRoomScreenState extends State<MessageRoomScreen> {
         .collection("contact")
         .doc(PreferencesManager.getUid())
         .update({"message_status": status});
-  }
-
-  @override
-  void initState() {
-    setStatus("Online");
-    // TODO: implement initState
-    super.initState();
   }
 
   @override
@@ -111,35 +115,35 @@ class _MessageRoomScreenState extends State<MessageRoomScreen> {
         padding: const EdgeInsets.all(5.0),
         child: Column(
           children: [
-            Container(
-              alignment: Alignment.topCenter,
-              // height: 525.sp,
-              // color: ColorPicker.red,
-              child: StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection("chat_room")
-                    .doc(widget.chatRoomId)
-                    .collection("chat")
-                    .orderBy("date_time", descending: false)
-                    .snapshots(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
-                        snapshot) {
-                  if (snapshot.hasData) {
-                    return Scrollbar(
-                      child: ListView.builder(
+            Expanded(
+              child: Container(
+                alignment: Alignment.topCenter,
+                // height: 525.sp,
+                // color: ColorPicker.red,
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection("chat_room")
+                      .doc(widget.chatRoomId)
+                      .collection("chat")
+                      .orderBy("date_time", descending: false)
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                          snapshot) {
+                    if (snapshot.hasData) {
+                      return ListView.builder(
                         itemCount: snapshot.data!.docs.length,
                         itemBuilder: (context, index) {
                           return CommonText.simpleText(
                               text: '${snapshot.data!.docs[index]['message']}',
                               color: ColorPicker.whiteColor);
                         },
-                      ),
-                    );
-                  } else {
-                    return Center(child: Container());
-                  }
-                },
+                      );
+                    } else {
+                      return Center(child: Container());
+                    }
+                  },
+                ),
               ),
             ),
             Spacer(),
@@ -292,66 +296,66 @@ class _MessageRoomScreenState extends State<MessageRoomScreen> {
     );
   }
 
-  Widget message(Map<String, dynamic> map, BuildContext context) {
-    return map["type"] == ["text"]
-        ? Container(
-            width: 100.sp,
-            alignment: map['sendBy'] == FirebaseAuth.instance.currentUser!.uid
-                ? Alignment.centerRight
-                : Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 3.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    // margin: map['sendBy'] == kFirebaseAuth.currentUser!.displayName
-                    //     ? EdgeInsets.only(left: 30)
-                    //     : EdgeInsets.only(right: 30),
-                    padding: EdgeInsets.only(
-                        top: 8,
-                        bottom: 8,
-                        left: map['sendBy'] ==
-                                FirebaseAuth.instance.currentUser!.displayName
-                            ? 24
-                            : 10,
-                        right: map['sendBy'] ==
-                                FirebaseAuth.instance.currentUser!.displayName
-                            ? 10
-                            : 24),
-                    decoration: BoxDecoration(
-                      borderRadius: map['sendBy'] ==
-                              FirebaseAuth.instance.currentUser!.displayName
-                          ? BorderRadius.only(
-                              topLeft: Radius.circular(23),
-                              topRight: Radius.circular(23),
-                              bottomLeft: Radius.circular(23))
-                          : BorderRadius.only(
-                              topLeft: Radius.circular(23),
-                              topRight: Radius.circular(23),
-                              bottomRight: Radius.circular(23)),
-                      color: map['sendBy'] ==
-                              FirebaseAuth.instance.currentUser!.displayName
-                          ? Color(0xff004D40)
-                          : Color(0xfffafafa),
-                    ),
-                    child: Text(
-                      map['message'],
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: map['sendBy'] ==
-                                FirebaseAuth.instance.currentUser!.displayName
-                            ? Color(0xfffafafa)
-                            : Color(0xff004D40),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
-        : SizedBox();
-    ;
-  }
+  // Widget message(Map<String, dynamic> map, BuildContext context) {
+  //   return map["type"] == ["text"]
+  //       ? Container(
+  //           width: 100.sp,
+  //           alignment: map['sendBy'] == FirebaseAuth.instance.currentUser!.uid
+  //               ? Alignment.centerRight
+  //               : Alignment.centerLeft,
+  //           child: Padding(
+  //             padding: const EdgeInsets.symmetric(vertical: 3.0),
+  //             child: Column(
+  //               mainAxisAlignment: MainAxisAlignment.end,
+  //               children: [
+  //                 Container(
+  //                   // margin: map['sendBy'] == kFirebaseAuth.currentUser!.displayName
+  //                   //     ? EdgeInsets.only(left: 30)
+  //                   //     : EdgeInsets.only(right: 30),
+  //                   padding: EdgeInsets.only(
+  //                       top: 8,
+  //                       bottom: 8,
+  //                       left: map['sendBy'] ==
+  //                               FirebaseAuth.instance.currentUser!.displayName
+  //                           ? 24
+  //                           : 10,
+  //                       right: map['sendBy'] ==
+  //                               FirebaseAuth.instance.currentUser!.displayName
+  //                           ? 10
+  //                           : 24),
+  //                   decoration: BoxDecoration(
+  //                     borderRadius: map['sendBy'] ==
+  //                             FirebaseAuth.instance.currentUser!.displayName
+  //                         ? BorderRadius.only(
+  //                             topLeft: Radius.circular(23),
+  //                             topRight: Radius.circular(23),
+  //                             bottomLeft: Radius.circular(23))
+  //                         : BorderRadius.only(
+  //                             topLeft: Radius.circular(23),
+  //                             topRight: Radius.circular(23),
+  //                             bottomRight: Radius.circular(23)),
+  //                     color: map['sendBy'] ==
+  //                             FirebaseAuth.instance.currentUser!.displayName
+  //                         ? Color(0xff004D40)
+  //                         : Color(0xfffafafa),
+  //                   ),
+  //                   child: Text(
+  //                     map['message'],
+  //                     style: TextStyle(
+  //                       fontSize: 16,
+  //                       fontWeight: FontWeight.w500,
+  //                       color: map['sendBy'] ==
+  //                               FirebaseAuth.instance.currentUser!.displayName
+  //                           ? Color(0xfffafafa)
+  //                           : Color(0xff004D40),
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         )
+  //       : SizedBox();
+  //   ;
+  // }
 }

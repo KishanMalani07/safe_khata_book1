@@ -65,4 +65,13 @@ class PreferencesManager {
   static get_Get_Mobile_Uid() {
     return getStorage.read("MobileUid");
   }
+
+  ///Get Mobile Number User Id
+  static Future setProfilePicture(String Profile) async {
+    await getStorage.write("Profile", Profile);
+  }
+
+  static getProfilePicture() {
+    return getStorage.read("Profile");
+  }
 }
